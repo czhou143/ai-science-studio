@@ -51,6 +51,69 @@ def parse_sources_csv(sources_path: Path):
     return sources
 
 
+def load_claim_source_map(issue_content_dir: Path):
+    """Map claim ids (C01) to source ids (S1). Missing file means no claim citations."""
+    claims_path = issue_content_dir / "claims.yaml"
+    if not claims_path.exists():
+        return {}
+    try:
+        import yaml
+    except ImportError as exc:
+        raise SystemExit(
+            "claims.yaml exists but PyYAML is not installed. "
+            "Install dependencies from requirements.txt."
+        ) from exc
+    with claims_path.open(encoding="utf-8") as handle:
+        data = yaml.safe_load(handle) or []
+    mapping = {}
+    if not isinstance(data, list):
+        return mapping
+    for item in data:
+        if not isinstance(item, dict):
+            continue
+        claim_id = str(item.get("id", "")).strip()
+        source_id = str(item.get("source", "")).strip()
+        if claim_id and source_id:
+            mapping[claim_id] = source_id
+    return mapping
+
+
+def source_anchor(source_id: str) -> str:
+    """Same markup the site already uses for [S1], [S2], ..."""
+    return (
+        f'<a href="#{source_id}" class="source-ref" '
+        f'title="查看参考文献 [{source_id}]">[{source_id}]</a>'
+    )
+
+
+def replace_citations(md_text: str, claim_sources: dict) -> str:
+    """Turn [Cxx] and [Sx] into source anchors.
+
+    Several claims often share one source. Adjacent citations that resolve to
+    the same source become a single [Sx] link, so the page stays as it was
+    when the sentence only showed that source once.
+    """
+
+    def replace_run(match):
+        tokens = re.findall(r"\[(C\d+|S\d+)\]", match.group(0))
+        anchors = []
+        previous = None
+        for token in tokens:
+            if token.startswith("C"):
+                source_id = claim_sources.get(token)
+                if not source_id:
+                    return match.group(0)
+            else:
+                source_id = token
+            if source_id == previous:
+                continue
+            anchors.append(source_anchor(source_id))
+            previous = source_id
+        return "".join(anchors)
+
+    return re.sub(r"(?:\[(?:C\d+|S\d+)\])+", replace_run, md_text)
+
+
 def parse_data_csv(data_path: Path):
     """读取 data.csv 文件"""
     rows = []
@@ -98,13 +161,9 @@ def render_article_page(issue_dir_name: str):
     title_match = re.search(r"^#\s+(.+)$", md_text, re.MULTILINE)
     article_title = title_match.group(1).strip() if title_match else "科普特刊"
 
-    # 将正文中的 [S1], [S2] 等编号转换为带内部定位锚点的超链接
-    def replace_citation(match):
-        sid = match.group(1)
-        return f'<a href="#{sid}" class="source-ref" title="查看参考文献 [{sid}]">[{sid}]</a>'
-
-    # 使用正则将正文里的 [S1]、[S12] 转换成链接
-    converted_md = re.sub(r'\[(S\d+)\]', replace_citation, md_text)
+    # [Cxx] 先还原成对应来源的 [Sx] 链接；仍直接写 [Sx] 的句子保持原样。
+    claim_sources = load_claim_source_map(issue_content_dir)
+    converted_md = replace_citations(md_text, claim_sources)
 
     # Markdown 转 HTML
     body_html = markdown.markdown(
