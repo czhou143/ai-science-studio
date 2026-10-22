@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }} - AI 科普工作室</title>
+  <link rel="stylesheet" href="{{ root_path }}static/css/tokens.css">
+  <link rel="stylesheet" href="{{ root_path }}static/css/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <a href="{{ root_path }}index.html" class="site-title">AI 科普工作室</a>
+      <p class="site-subtitle">用严谨的数据与系统视角，看清人工智能背后的真实物理世界</p>
+      <nav class="nav-links">
+        <a href="{{ root_path }}index.html">全部期刊</a>
+        <a href="{{ root_path }}issue01/index.html">第 1 期</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="content-container">
+      {{ content }}
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <p class="footer-copy">© 2026 AI 科普工作室 · 内容坚持数据可溯源、边界有声明、论证有出处</p>
+      <p>静态生成 · 零外部依赖 · 适配移动端与桌面端</p>
+    </div>
+  </footer>
+</body>
+</html>

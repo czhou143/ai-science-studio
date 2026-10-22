@@ -1,0 +1,30 @@
+/* AI 科普工作室 · 视觉风格 v1 设计变量（来自 Figma 风格稿） */
+:root {
+  /* 配色 */
+  --ink: #1B2A41;        /* 正文 */
+  --paper: #F7F4EC;      /* 背景 */
+  --card: #FFFFFF;
+  --muted: #5B6475;
+  --rule: #D9D4C7;
+  --accent-warm: #B5452F; /* 安全、警示 */
+  --accent-cool: #1F6E8C; /* 数据、链接、引用 */
+  /* 图表系列色（Okabe-Ito 色盲友好），只用于线和色块，不用于文字 */
+  --series-1: #0072B2;
+  --series-2: #E69F00;
+  --series-3: #009E73;
+  --series-4: #CC79A7;
+  --series-5: #56B4E9;
+
+  /* 字体 */
+  --font-heading: "Noto Serif SC", serif;
+  --font-body: "Noto Sans SC", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* 字号 / 行高 */
+  --h1: 40px; --h1-lh: 52px;
+  --h2: 30px; --h2-lh: 40px;
+  --h3: 22px; --h3-lh: 32px;
+  --body: 18px; --body-lh: 30px;
+  --caption: 15px; --caption-lh: 22px;
+  --code: 15px; --code-lh: 24px;
+}

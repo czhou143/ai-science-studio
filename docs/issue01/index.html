@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI算力，为什么卡在电力上 - AI 科普工作室</title>
+  <link rel="stylesheet" href="../static/css/tokens.css">
+  <link rel="stylesheet" href="../static/css/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="site-title">AI 科普工作室</a>
+      <p class="site-subtitle">用严谨的数据与系统视角，看清人工智能背后的真实物理世界</p>
+      <nav class="nav-links">
+        <a href="../index.html">全部期刊</a>
+        <a href="../issue01/index.html">第 1 期</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="content-container">
+      <article class="article-body">
+  <h1>AI算力，为什么卡在电力上</h1>
+<blockquote>
+<p>从一次提问到一座机房，理解计算背后的供电难题</p>
+</blockquote>
+<h2>一句回答，背后是整座机房</h2>
+<p>你在对话框里敲下一个问题，等待人工智能（AI）回答。屏幕上出现的是文字，背后运转的却是服务器、存储设备和网络。计算要用电，带走计算产生的热量也要用电。问题看起来很轻，支撑它的机房却必须持续供电。</p>
+<p>问AI究竟用了多少电？报告中的研究给出了不同口径的结果：de Vries估算，单次查询约耗电3瓦时<a href="#S1" class="source-ref" title="查看参考文献 [S1]">[S1]</a>。谷歌对Gemini文本提示的实测中位数约为0.26瓦时<a href="#S2" class="source-ref" title="查看参考文献 [S2]">[S2]</a>。中位数就是把测量结果排序后，处于中间位置的数值。前者是估算，后者是特定模型的实测，不能把它们当成所有AI请求的固定电量，也不能直接据此判断同等条件下节省了多少电。</p>
+<p>理解用电，还得分清训练和推理。训练是利用数据调整模型参数的过程；推理是让训练好的模型处理实际输入、给出结果。训练需要计算设备密集协作，推理则随着日常应用不断发生。单次调用耗电不高，不代表大量调用汇总后仍然很少。数据中心的账单里，除了计算本身，还有散热、存储和网络。讨论AI用电时，不能只盯着芯片，也不能只看一次对话。</p>
+<h2>芯片再快，也得等数据送来</h2>
+<p>算力可以理解为计算系统处理任务的能力。提高算力不只是把芯片做得更快。模型参数需要被不断读取，如果数据来不及送到，计算单元就会等待。这种计算能力受数据传输限制的现象，被称为“内存墙”。它提醒我们：能算多快和能多快拿到数据，是相互牵制的条件。</p>
+<p>HBM是高带宽内存，通过堆叠内存芯片并与计算芯片紧密组合，提高数据传输能力。把这些部件连接、组合起来的工艺，就是这里所说的封装。它让处理器更容易拿到所需数据，但制造和封装工艺也更复杂。封装产能和产品合格率，都会影响高端AI芯片能否顺利交付。增加计算单元，并不能自动消除这些限制。</p>
+<p>同样的问题还发生在芯片之间。大型训练任务需要许多处理器交换数据，传输速度和延迟会影响整个集群的有效算力。为了减少信号传输损耗，设备需要靠得更近；布局越集中，供电与散热的压力也越集中。机房因此不能只按设备数量来规划，还要考虑电力如何送进机架、热量如何排出去。</p>
+<p>所以，芯片、内存、封装、互联和散热是一套相互制约的系统。某个环节进步，并不意味着整座机房就能按同样幅度扩张。电力问题正是在这些工程条件交织之后，变得难以绕开。</p>
+<h2>机房建好了，电未必跟得上</h2>
+<p>国际能源署估算，全球数据中心在2024年耗电约415太瓦时<a href="#S3" class="source-ref" title="查看参考文献 [S3]">[S3]</a>。按照该机构的基准情景，到2030年，这一数字预计达到945太瓦时<a href="#S3" class="source-ref" title="查看参考文献 [S3]">[S3]</a>。这里统计的是全球数据中心用电，不能直接全部算到AI名下；后一个数字也是特定情景下的预测，并非已经确定的结果。</p>
+<p>《中国能源报》引中国信通院数据，2023年中国数据中心用电约1500亿千瓦时，占全社会用电1.6%<a href="#S11" class="source-ref" title="查看参考文献 [S11]">[S11]</a>。国家能源局披露，2025年全国算力中心用电约1700亿千瓦时，已建成42个万卡级智算集群<a href="#S12" class="source-ref" title="查看参考文献 [S12]">[S12]</a>。</p>
+<p>另有几组预测，但原报告未注明具体情景：劳伦斯伯克利国家实验室（LBNL）预测，美国2028年数据中心用电325–580太瓦时、占全国用电的6.7%–12%<a href="#S4" class="source-ref" title="查看参考文献 [S4]">[S4]</a>。美国电力研究所（EPRI）预测，美国2030年数据中心用电占比为4.6%–9.1%<a href="#S5" class="source-ref" title="查看参考文献 [S5]">[S5]</a>。新华网引中国信通院预测，中国2030年数据中心用电或超过7000亿千瓦时<a href="#S13" class="source-ref" title="查看参考文献 [S13]">[S13]</a>。</p>
+<p>看其他机构的数据时也要保留边界意识。跨机构预测的统计范围能否对应、计算方法与假设有何差异，目前仍有争议。不能把不同报告中的数字简单拼接，就当成一套完全一致的全球用电账本。</p>
+<p>即使知道未来可能需要更多电，也不意味着电能及时送到。数据中心与配套电网的建设节奏并不一致：机房建设相对较快，高压输电线路和变电站却涉及环境评估、土地和调度审批。计算设备到位，连接它们的电网仍可能没有准备好，并网排队因此成为实际障碍。</p>
+<p>供电还要考虑时间上的匹配。为了尽快完成训练，计算集群通常希望持续运行；风电和光伏的出力却会受天气影响。全年发电量够不够，与需要计算时能否稳定供电，是相关但不同的问题。电网需要安排备用容量，数据中心也要考虑供电可靠性。算力扩张因此不仅取决于有没有发电厂，还取决于线路、变电站和调度能否协同。</p>
+<h2>电费之外，还得买供电把握</h2>
+<p>电力市场不只交易已经发出的电。容量市场是一种为可用供电能力付费的机制，关注的是系统需要时，是否有足够的供电资源。这与按实际用电量付费的概念有所区别，也说明稳定供电本身需要成本。</p>
+<p>美国区域电网运营商PJM公布的2025/2026年度容量市场拍卖中，在报告所列区域的口径下，拍卖最终确定的价格由上一年度的28.92美元/兆瓦-日升至269.92美元/兆瓦-日<a href="#S6" class="source-ref" title="查看参考文献 [S6]">[S6]</a>。这里的价格按可用容量和时间计价，不是按实际用电量计算的电费。报告引用的官方公告指出，发电机组退役是价格上涨的主要原因之一，向拍卖提交的可用供应量因此减少约6600兆瓦<a href="#S6" class="source-ref" title="查看参考文献 [S6]">[S6]</a>。</p>
+<p>这组数据说明，供电能力的变化会反映在市场价格上，但不能据此把价格上涨全部归因于AI。对数据中心而言，需要考虑的也不只是买多少电，还有维持可靠供电需要付出什么代价。</p>
+<p>与此同时，依靠新增化石能源供电还会带来碳排放压力。计算需求、电网可靠性、能源成本与减排目标，需要放在一起衡量。单独选择某一种电源，并不能替代对整套供电安排的判断。</p>
+<h2>哪种电源，都要算完整的账</h2>
+<p>比较电源时，常会用到LCOE，即平准化度电成本：把发电方案在建设和运行期间的成本，分摊到每单位发电量上。这个指标有助于比较成本，但还需要结合建设周期、供电稳定性与技术成熟度来看。</p>
+<p>Lazard在2025年发布的未补贴测算中，其列出的光伏方案LCOE为38—78美元/兆瓦时，新建核电为141—220美元/兆瓦时，光伏+储能和风电+储能分别为50–131和44–123美元/兆瓦时<a href="#S7" class="source-ref" title="查看参考文献 [S7]">[S7]</a>。这些都是一定口径下的区间，不能把区间中的某个数直接当成所有项目的实际电价。</p>
+<p>天然气技术成熟、建设相对较快，但会产生二氧化碳。风电和光伏有成本优势，却需要处理出力波动；加入储能后，成本也会变化。核电能提供稳定电力，但新建项目的成本不能与已折旧机组的运行成本混为一谈。地热同样能提供稳定电力，前期勘探和钻井成本却限制了推广。</p>
+<p>因此，比较风光发电时，储能也应放进账本，而不是先选择一项发电技术，再略过配套条件。能在需要时稳定供电，与发电本身便宜，需要结合起来判断。储能的成熟度与成本，也会影响整个方案能否实施。</p>
+<p>SMR指小型模块化反应堆，希望通过标准化制造缩短建设周期。不过，其宣传中的低度电成本能否在规模化运行中兑现，目前仍有争议，不能写成已经实现的结果。先进核燃料供应链也是部署时需要考虑的条件。可控核聚变则仍属于远期方案，不能直接填补眼前的供电缺口。</p>
+<h2>少耗一点，也能多做一些</h2>
+<p>缓解瓶颈不只有增加供电。硬件可以减少不必要的计算与数据搬运，在保证模型精度的前提下采用更低精度的数据格式；散热也可以改用液冷，也就是利用液体带走设备热量，减少制冷环节的电力损耗。</p>
+<p>模型结构同样重要。MoE是混合专家模型，让输入由部分相关参数处理，而不是每次都调用全部参数。DeepSeek技术报告中的模型总参数量为6710亿，但处理每个词元时激活的参数为370亿<a href="#S8" class="source-ref" title="查看参考文献 [S8]">[S8]</a>。词元是模型处理文本的基本单位。这个例子说明，模型拥有多少参数，与每次计算需要动用多少参数，并不是同一个问题。</p>
+<p>在空间上，对网络延迟不敏感的训练任务，可以靠近能源资源和冷源条件较好的地区；报告介绍的“东数西算”就包含这样的安排。Li等人预测，2027年全球AI取水量为42亿–66亿立方米，但原报告未注明具体情景<a href="#S9" class="source-ref" title="查看参考文献 [S9]">[S9]</a>。散热还涉及水资源，机房选址不能只看电够不够，也要考虑当地的供水条件。在缺水地区扩建算力设施，会面临更高的生态评估风险。在时间上，训练与需要实时响应的推理，也可以采用不同的调度方式。</p>
+<p>杜克大学的研究讨论了灵活负荷的接入潜力：如果新增用电设施愿意在电网紧张时降载，现有系统就可能容纳更多负荷；其2025年报告测算，美国电网在0.25%、0.5%、1%年限电率条件下，可分别接入76、98、126吉瓦（GW）新负荷<a href="#S10" class="source-ref" title="查看参考文献 [S10]">[S10]</a>。这是附带条件的分析，不能读成电网已经无条件增加了供电能力。更合理的方向，是让模型、硬件、散热和用电安排共同改善，而不把希望全部寄托在某一种新电源上。</p>
+<p>你可以记住的要点：</p>
+<ul>
+<li>一次提问的耗电没有适用于所有模型的固定答案；单次能耗与整体用电规模需要分开理解。</li>
+<li>算力扩张既受芯片和数据传输限制，也受电网建设、稳定供电与散热条件限制。</li>
+<li>预测要看机构、年份和情景；能源成本与模型效率，都需要放回具体条件中判断。</li>
+</ul>
+
+  <section id="key-data" class="section-block">
+    <h2>关键数据</h2>
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>指标</th>
+            <th>数值</th>
+            <th>单位</th>
+            <th>年份</th>
+            <th>口径或情景</th>
+            <th>来源</th>
+          </tr>
+        </thead>
+        <tbody>
+<tr>
+  <td>单次AI文本查询能耗</td>
+  <td><strong>约 3</strong></td>
+  <td>瓦时 (Wh)</td>
+  <td>2023</td>
+  <td>de Vries (Joule) 估算</td>
+  <td><a href="#S1" class="source-ref">[S1]</a></td>
+</tr>
+<tr>
+  <td>单次AI文本查询能耗</td>
+  <td><strong>约 0.26</strong></td>
+  <td>瓦时 (Wh)</td>
+  <td>2025</td>
+  <td>谷歌 Gemini 官方实测中位数</td>
+  <td><a href="#S2" class="source-ref">[S2]</a></td>
+</tr>
+<tr>
+  <td>全球数据中心用电量</td>
+  <td><strong>415</strong></td>
+  <td>太瓦时 (TWh)</td>
+  <td>2024</td>
+  <td>IEA 全球估算测算值</td>
+  <td><a href="#S3" class="source-ref">[S3]</a></td>
+</tr>
+<tr>
+  <td>全球数据中心用电预测</td>
+  <td><strong>945</strong></td>
+  <td>太瓦时 (TWh)</td>
+  <td>2030</td>
+  <td>IEA 设定的基准情景预测</td>
+  <td><a href="#S3" class="source-ref">[S3]</a></td>
+</tr>
+<tr>
+  <td>美国数据中心用电预测</td>
+  <td><strong>325 - 580</strong></td>
+  <td>太瓦时 (TWh)</td>
+  <td>2028</td>
+  <td>LBNL 预测（占全国总需求 6.7%-12%）</td>
+  <td><a href="#S4" class="source-ref">[S4]</a></td>
+</tr>
+<tr>
+  <td>美国数据中心用电占比预测</td>
+  <td><strong>4.6 - 9.1</strong></td>
+  <td>百分比 (%)</td>
+  <td>2030</td>
+  <td>EPRI 预测美国数据中心耗电占比</td>
+  <td><a href="#S5" class="source-ref">[S5]</a></td>
+</tr>
+<tr>
+  <td>中国算力中心用电量</td>
+  <td><strong>1500</strong></td>
+  <td>亿千瓦时</td>
+  <td>2023</td>
+  <td>《中国能源报》引中国信通院数据</td>
+  <td><a href="#S11" class="source-ref">[S11]</a></td>
+</tr>
+<tr>
+  <td>中国算力中心用电量</td>
+  <td><strong>1700</strong></td>
+  <td>亿千瓦时</td>
+  <td>2025</td>
+  <td>国家能源局 2026 年披露</td>
+  <td><a href="#S12" class="source-ref">[S12]</a></td>
+</tr>
+<tr>
+  <td>中国数据中心用电量预测</td>
+  <td><strong>7000</strong></td>
+  <td>亿千瓦时</td>
+  <td>2030</td>
+  <td>新华网引中国信通院预测</td>
+  <td><a href="#S13" class="source-ref">[S13]</a></td>
+</tr>
+<tr>
+  <td>全球AI水资源取水量</td>
+  <td><strong>42 - 66</strong></td>
+  <td>亿立方米</td>
+  <td>2027</td>
+  <td>Li et al. (2023) 基于模型预测</td>
+  <td><a href="#S9" class="source-ref">[S9]</a></td>
+</tr>
+<tr>
+  <td>PJM容量市场减少可用量</td>
+  <td><strong>约 6600</strong></td>
+  <td>兆瓦 (MW)</td>
+  <td>2025/2026</td>
+  <td>官方拍卖由于发电机组退役导致的容量削减</td>
+  <td><a href="#S6" class="source-ref">[S6]</a></td>
+</tr>
+<tr>
+  <td>灵活负荷可接入容量潜力</td>
+  <td><strong>76 - 126</strong></td>
+  <td>吉瓦 (GW)</td>
+  <td>2025</td>
+  <td>Duke 报告：在 0.25% - 1.0% 限电率条件下的接入潜力</td>
+  <td><a href="#S10" class="source-ref">[S10]</a></td>
+</tr>
+<tr>
+  <td>天然气(联合循环)度电成本</td>
+  <td><strong>48 - 109</strong></td>
+  <td>美元/MWh</td>
+  <td>2025</td>
+  <td>Lazard v18.0 测算 (未补贴 LCOE)</td>
+  <td><a href="#S7" class="source-ref">[S7]</a></td>
+</tr>
+<tr>
+  <td>天然气(调峰电厂)度电成本</td>
+  <td><strong>149 - 251</strong></td>
+  <td>美元/MWh</td>
+  <td>2025</td>
+  <td>Lazard v18.0 测算 (未补贴 LCOE)</td>
+  <td><a href="#S7" class="source-ref">[S7]</a></td>
+</tr>
+<tr>
+  <td>燃煤发电度电成本</td>
+  <td><strong>71 - 173</strong></td>
+  <td>美元/MWh</td>
+  <td>2025</td>
+  <td>Lazard v18.0 测算 (未补贴 LCOE)</td>
+  <td><a href="#S7" class="source-ref">[S7]</a></td>
+</tr>
+<tr>
+  <td>新建核电度电成本</td>
+  <td><strong>141 - 220</strong></td>
+  <td>美元/MWh</td>
+  <td>2025</td>
+  <td>Lazard v18.0 测算 (未补贴 LCOE)</td>
+  <td><a href="#S7" class="source-ref">[S7]</a></td>
+</tr>
+<tr>
+  <td>公用事业光伏度电成本</td>
+  <td><strong>38 - 78</strong></td>
+  <td>美元/MWh</td>
+  <td>2025</td>
+  <td>Lazard v18.0 测算 (未补贴 LCOE)</td>
+  <td><a href="#S7" class="source-ref">[S7]</a></td>
+</tr>
+<tr>
+  <td>陆上风电度电成本</td>
+  <td><strong>37 - 86</strong></td>
+  <td>美元/MWh</td>
+  <td>2025</td>
+  <td>Lazard v18.0 测算 (未补贴 LCOE)</td>
+  <td><a href="#S7" class="source-ref">[S7]</a></td>
+</tr>
+<tr>
+  <td>光伏+储能度电成本</td>
+  <td><strong>50 - 131</strong></td>
+  <td>美元/MWh</td>
+  <td>2025</td>
+  <td>Lazard v18.0 测算 (未补贴 LCOE)</td>
+  <td><a href="#S7" class="source-ref">[S7]</a></td>
+</tr>
+<tr>
+  <td>风电+储能度电成本</td>
+  <td><strong>44 - 123</strong></td>
+  <td>美元/MWh</td>
+  <td>2025</td>
+  <td>Lazard v18.0 测算 (未补贴 LCOE)</td>
+  <td><a href="#S7" class="source-ref">[S7]</a></td>
+</tr>
+<tr>
+  <td>地热能度电成本</td>
+  <td><strong>66 - 109</strong></td>
+  <td>美元/MWh</td>
+  <td>2025</td>
+  <td>Lazard v18.0 测算 (未补贴 LCOE)</td>
+  <td><a href="#S7" class="source-ref">[S7]</a></td>
+</tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="sources" class="section-block">
+    <h2>参考文献与来源列表</h2>
+    <ol class="sources-list">
+<li id="S1" class="source-item">
+  <div class="source-header">
+    <span class="source-tag">[S1]</span>
+    <a href="https://doi.org/10.1016/j.joule.2023.09.004" target="_blank" rel="noopener noreferrer" class="source-title">The growing energy footprint of artificial intelligence.</a>
+  </div>
+  <div class="source-meta">de Vries, A. · 2023</div>
+  <div class="source-claim"><span class="source-claim-label">支撑主张：</span>单次AI文本查询能耗的估算</div>
+</li>
+<li id="S2" class="source-item">
+  <div class="source-header">
+    <span class="source-tag">[S2]</span>
+    <a href="https://cloud.google.com/blog/products/infrastructure/measuring-the-environmental-impact-of-ai-inference" target="_blank" rel="noopener noreferrer" class="source-title">Measuring the environmental impact of AI inference</a>
+  </div>
+  <div class="source-meta">Google Cloud Blog · 2025</div>
+  <div class="source-claim"><span class="source-claim-label">支撑主张：</span>Gemini单次文本提示能耗的官方实测中位数</div>
+</li>
+<li id="S3" class="source-item">
+  <div class="source-header">
+    <span class="source-tag">[S3]</span>
+    <a href="https://www.iea.org/reports/energy-and-ai" target="_blank" rel="noopener noreferrer" class="source-title">Energy and AI</a>
+  </div>
+  <div class="source-meta">IEA (International Energy Agency) · 2025</div>
+  <div class="source-claim"><span class="source-claim-label">支撑主张：</span>全球数据中心用电现状、基准情景预测及能耗结构</div>
+</li>
+<li id="S4" class="source-item">
+  <div class="source-header">
+    <span class="source-tag">[S4]</span>
+    <a href="https://eta.lbl.gov/publications/2024-united-states-data-center-energy" target="_blank" rel="noopener noreferrer" class="source-title">2024 United States Data Center Energy Usage Report</a>
+  </div>
+  <div class="source-meta">LBNL (Lawrence Berkeley National Laboratory) · 2024</div>
+  <div class="source-claim"><span class="source-claim-label">支撑主张：</span>美国数据中心2028年用电量及全国用电占比预测</div>
+</li>
+<li id="S5" class="source-item">
+  <div class="source-header">
+    <span class="source-tag">[S5]</span>
+    <a href="https://www.epri.com/research/programs/064501/results/3002028905" target="_blank" rel="noopener noreferrer" class="source-title">Powering Intelligence: Analyzing AI and Data Center Energy Consumption</a>
+  </div>
+  <div class="source-meta">EPRI (Electric Power Research Institute) · 2024</div>
+  <div class="source-claim"><span class="source-claim-label">支撑主张：</span>美国数据中心2030年用电占比预测</div>
+</li>
+<li id="S6" class="source-item">
+  <div class="source-header">
+    <span class="source-tag">[S6]</span>
+    <a href="https://www.pjm.com/-/media/DotCom/about-pjm/newsroom/2024-releases/20240730-pjm-capacity-auction-procures-sufficient-resources-to-meet-rto-reliability-requirement.ashx" target="_blank" rel="noopener noreferrer" class="source-title">PJM Capacity Auction Procures Sufficient Resources To Meet RTO Reliability Requirement</a>
+  </div>
+  <div class="source-meta">PJM Interconnection · 2024</div>
+  <div class="source-claim"><span class="source-claim-label">支撑主张：</span>PJM容量拍卖价格变化及机组退役造成的可用供应量减少</div>
+</li>
+<li id="S7" class="source-item">
+  <div class="source-header">
+    <span class="source-tag">[S7]</span>
+    <a href="https://www.lazard.com/research-insights/levelized-cost-of-energy-plus-version-18-0/" target="_blank" rel="noopener noreferrer" class="source-title">Levelized Cost of Energy Analysis (LCOE+) Version 18.0</a>
+  </div>
+  <div class="source-meta">Lazard · 2025</div>
+  <div class="source-claim"><span class="source-claim-label">支撑主张：</span>未补贴口径下各类发电与储能方案的平准化度电成本</div>
+</li>
+<li id="S8" class="source-item">
+  <div class="source-header">
+    <span class="source-tag">[S8]</span>
+    <a href="https://arxiv.org/abs/2412.19437" target="_blank" rel="noopener noreferrer" class="source-title">DeepSeek-V3 Technical Report (arXiv:2412.19437)</a>
+  </div>
+  <div class="source-meta">DeepSeek AI · 2024</div>
+  <div class="source-claim"><span class="source-claim-label">支撑主张：</span>模型总参数、每词元激活参数及训练资源消耗</div>
+</li>
+<li id="S9" class="source-item">
+  <div class="source-header">
+    <span class="source-tag">[S9]</span>
+    <a href="https://arxiv.org/abs/2304.03271" target="_blank" rel="noopener noreferrer" class="source-title">Making AI Less &quot;Thirsty&quot;: Uncovering and Addressing the Secret Water Footprint of AI Models</a>
+  </div>
+  <div class="source-meta">Li P, et al. · 2023</div>
+  <div class="source-claim"><span class="source-claim-label">支撑主张：</span>全球AI需求带来的2027年水资源取水量预测</div>
+</li>
+<li id="S10" class="source-item">
+  <div class="source-header">
+    <span class="source-tag">[S10]</span>
+    <a href="https://nicholasinstitute.duke.edu/publications/rethinking-load-growth" target="_blank" rel="noopener noreferrer" class="source-title">Rethinking Load Growth: Assessing the Potential for Integration of Large Flexible Loads in US Power Systems</a>
+  </div>
+  <div class="source-meta">Duke Nicholas Institute for Energy, Environment &amp; Sustainability · 2025</div>
+  <div class="source-claim"><span class="source-claim-label">支撑主张：</span>不同限电降载条件下的灵活负荷接入潜力及限电持续时间与保留供电比例</div>
+</li>
+<li id="S11" class="source-item">
+  <div class="source-header">
+    <span class="source-tag">[S11]</span>
+    <a href="http://paper.people.com.cn/zgnyb/html/2024-09/09/content_26081013.htm" target="_blank" rel="noopener noreferrer" class="source-title">《2023年中国数据中心用电量约1500亿度》相关报道</a>
+  </div>
+  <div class="source-meta">《中国能源报》 / 中国信通院 · 2024</div>
+  <div class="source-claim"><span class="source-claim-label">支撑主张：</span>2023年中国数据中心用电量及全社会用电占比</div>
+</li>
+<li id="S12" class="source-item">
+  <div class="source-header">
+    <span class="source-tag">[S12]</span>
+    <a href="http://paper.people.com.cn/rmrbhwb/pc/content/202605/27/content_30159359.html" target="_blank" rel="noopener noreferrer" class="source-title">《去年全国算力中心总用电量1700亿千瓦时》</a>
+  </div>
+  <div class="source-meta">人民日报海外版 / 国家能源局 · 2026</div>
+  <div class="source-claim"><span class="source-claim-label">支撑主张：</span>2025年中国算力中心用电量及已建成万卡级智算集群情况</div>
+</li>
+<li id="S13" class="source-item">
+  <div class="source-header">
+    <span class="source-tag">[S13]</span>
+    <a href="https://www.news.cn/tech/20260608/05f785a31b4241d2a3abd6454c0fa9b0/c.html" target="_blank" rel="noopener noreferrer" class="source-title">《数据中心建设强化“算电协同”》</a>
+  </div>
+  <div class="source-meta">新华网 / 中国信通院 · 2026</div>
+  <div class="source-claim"><span class="source-claim-label">支撑主张：</span>中国数据中心2030年用电量及占比预测</div>
+</li>
+    </ol>
+  </section>
+</article>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <p class="footer-copy">© 2026 AI 科普工作室 · 内容坚持数据可溯源、边界有声明、论证有出处</p>
+      <p>静态生成 · 零外部依赖 · 适配移动端与桌面端</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,430 @@
+/* 站点全局与响应式样式 - 严格仅使用 tokens.css 中定义的 CSS 变量 */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: var(--body);
+  background-color: var(--paper);
+  color: var(--ink);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  /* 中文字体使用系统默认字体回退：PingFang SC, Hiragino Sans GB, Microsoft YaHei 等 */
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  line-height: var(--body-lh);
+  color: var(--ink);
+  background-color: var(--paper);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* 链接基础样式 */
+a {
+  color: var(--accent-cool);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--accent-warm);
+}
+
+/* 布局容器 */
+.site-header,
+.site-footer {
+  width: 100%;
+  border-bottom: 1px solid var(--rule);
+  background-color: var(--card);
+}
+
+.site-footer {
+  border-top: 1px solid var(--rule);
+  border-bottom: none;
+  margin-top: auto;
+}
+
+.header-container,
+.footer-container,
+.content-container {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 20px 24px;
+}
+
+/* 头部导航与标识 */
+.site-title {
+  font-family: var(--font-heading), -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", serif;
+  font-size: var(--h2);
+  line-height: var(--h2-lh);
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.site-subtitle {
+  font-size: var(--caption);
+  line-height: var(--caption-lh);
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.nav-links a {
+  font-size: var(--caption);
+  line-height: var(--caption-lh);
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  color: var(--accent-cool);
+  text-decoration: underline;
+}
+
+/* 页脚样式 */
+.site-footer {
+  color: var(--muted);
+  font-size: var(--caption);
+  line-height: var(--caption-lh);
+}
+
+.footer-copy {
+  margin-bottom: 6px;
+}
+
+/* 主体文章与排版 */
+.main-content {
+  flex: 1 0 auto;
+  padding-top: 24px;
+  padding-bottom: 48px;
+}
+
+.article-body {
+  font-size: var(--body);
+  line-height: var(--body-lh);
+  color: var(--ink);
+}
+
+/* 标题样式 */
+.article-body h1,
+.page-title {
+  font-family: var(--font-heading), -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", serif;
+  font-size: var(--h1);
+  line-height: var(--h1-lh);
+  color: var(--ink);
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.article-body h2 {
+  font-family: var(--font-heading), -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", serif;
+  font-size: var(--h2);
+  line-height: var(--h2-lh);
+  color: var(--ink);
+  margin-top: 44px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.article-body h3 {
+  font-family: var(--font-heading), -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", serif;
+  font-size: var(--h3);
+  line-height: var(--h3-lh);
+  color: var(--ink);
+  margin-top: 32px;
+  margin-bottom: 12px;
+}
+
+.article-body p {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  word-wrap: break-word;
+}
+
+.article-body blockquote {
+  border-left: 4px solid var(--accent-cool);
+  padding: 12px 18px;
+  background-color: var(--card);
+  color: var(--muted);
+  margin: 20px 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.article-body blockquote p {
+  margin: 0;
+}
+
+.article-body ul,
+.article-body ol {
+  margin: 16px 0 16px 28px;
+  padding: 0;
+}
+
+.article-body li {
+  margin-bottom: 8px;
+}
+
+.article-body code {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--code);
+  line-height: var(--code-lh);
+  background-color: var(--card);
+  border: 1px solid var(--rule);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.article-body pre {
+  background-color: var(--card);
+  border: 1px solid var(--rule);
+  padding: 16px;
+  overflow-x: auto;
+  margin: 20px 0;
+  border-radius: 4px;
+}
+
+.article-body pre code {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+/* 来源上标与链接样式 */
+.source-ref {
+  display: inline-block;
+  font-size: var(--caption);
+  line-height: 1;
+  vertical-align: super;
+  padding: 0 2px;
+  color: var(--accent-cool);
+  text-decoration: none;
+  font-family: var(--font-mono), monospace;
+  font-weight: 600;
+}
+
+.source-ref:hover {
+  color: var(--accent-warm);
+  text-decoration: underline;
+}
+
+/* 章节容器与卡片 */
+.section-block {
+  margin-top: 52px;
+  padding-top: 28px;
+  border-top: 2px solid var(--rule);
+}
+
+.section-block h2 {
+  font-family: var(--font-heading), -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", serif;
+  font-size: var(--h2);
+  line-height: var(--h2-lh);
+  color: var(--ink);
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
+}
+
+/* 关键数据表格容器与响应式滚动 */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 16px;
+  margin-bottom: 24px;
+  background-color: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--caption);
+  line-height: var(--caption-lh);
+  text-align: left;
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+.data-table th {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-weight: 700;
+  border-bottom: 2px solid var(--rule);
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:hover td {
+  background-color: var(--paper);
+}
+
+/* 来源列表 */
+.sources-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+
+.source-item {
+  background-color: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  font-size: var(--caption);
+  line-height: var(--caption-lh);
+  transition: border-color 0.2s ease;
+}
+
+.source-item:target {
+  border-color: var(--accent-cool);
+  background-color: var(--paper);
+}
+
+.source-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.source-tag {
+  display: inline-block;
+  font-family: var(--font-mono), monospace;
+  font-weight: 700;
+  color: var(--accent-cool);
+  font-size: var(--caption);
+}
+
+.source-title {
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.source-meta {
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.source-claim {
+  color: var(--ink);
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--rule);
+}
+
+.source-claim-label {
+  color: var(--muted);
+  font-size: var(--caption);
+}
+
+/* 首页 Issue 列表卡片 */
+.issue-card {
+  background-color: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 24px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.issue-tag {
+  display: inline-block;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--caption);
+  color: var(--accent-cool);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.issue-title {
+  font-family: var(--font-heading), -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", serif;
+  font-size: var(--h2);
+  line-height: var(--h2-lh);
+  margin-bottom: 12px;
+}
+
+.issue-title a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.issue-title a:hover {
+  color: var(--accent-cool);
+  text-decoration: underline;
+}
+
+.issue-summary {
+  color: var(--muted);
+  font-size: var(--body);
+  line-height: var(--body-lh);
+  margin-bottom: 16px;
+}
+
+.issue-link-btn {
+  display: inline-block;
+  font-size: var(--caption);
+  line-height: var(--caption-lh);
+  color: var(--accent-cool);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.issue-link-btn:hover {
+  color: var(--accent-warm);
+  text-decoration: underline;
+}
+
+/* 手机端适配 (Mobile Responsive) */
+@media (max-width: 640px) {
+  .header-container,
+  .footer-container,
+  .content-container {
+    padding: 16px;
+  }
+
+  .site-title {
+    font-size: var(--h3);
+    line-height: var(--h3-lh);
+  }
+
+  .article-body h1,
+  .page-title {
+    font-size: var(--h2);
+    line-height: var(--h2-lh);
+  }
+
+  .article-body h2 {
+    font-size: var(--h3);
+    line-height: var(--h3-lh);
+    margin-top: 32px;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 8px 10px;
+  }
+}
