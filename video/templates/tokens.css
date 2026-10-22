@@ -1,0 +1,57 @@
+/* Shared frame for 1080x1920 explainers. Flat science-magazine palette. */
+:root {
+  --navy: #1B2A41;
+  --blue: #1F6E8C;
+  --orange: #B5452F;
+  --paper: #F7F4EC;
+  --gray: #5B6475;
+  --font: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", "WenQuanYi Micro Hei", "Droid Sans Fallback", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  width: 1080px;
+  height: 1920px;
+  overflow: hidden;
+  background: var(--navy);
+  color: var(--paper);
+  font-family: var(--font);
+}
+
+.rail {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 16px;
+  background: var(--blue);
+  z-index: 4;
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background-image: radial-gradient(rgba(247, 244, 236, 0.045) 0.7px, transparent 0.7px);
+  background-size: 7px 7px;
+}
+
+.subtitle {
+  display: none;
+  position: absolute;
+  left: 72px;
+  right: 72px;
+  bottom: 78px;
+  z-index: 6;
+  margin: 0;
+  padding: 18px 28px;
+  text-align: center;
+  font-size: 40px;
+  line-height: 1.45;
+  color: var(--paper);
+  background: rgba(27, 42, 65, 0.72);
+  border-top: 4px solid var(--orange);
+}

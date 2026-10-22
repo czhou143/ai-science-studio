@@ -1,0 +1,332 @@
+# 第 1 期可核查主张。excerpt 是调研报告中的原句，不能改写。
+# status: verified 表示该句已在 research-v4 中逐字找到；draft 表示还缺原句。
+- id: C01
+  text: 单次 AI 查询耗电约 3 瓦时（de Vries 估算）
+  value: 3
+  unit: 瓦时
+  year: 2023
+  kind: estimated
+  scope: de Vries 2023 年对单次 AI 查询的估算，不是所有模型的固定电量
+  source: S1
+  excerpt: |-
+    de Vries (2023) 在《Joule》期刊中估计单次查询耗电约 3 Wh
+  status: verified
+- id: C02
+  text: Gemini 单次文本提示能耗的实测中位数约 0.26 瓦时
+  value: '0.26'
+  unit: 瓦时
+  year: 2025
+  kind: measured
+  scope: 谷歌对 Gemini 文本提示的官方实测中位数
+  source: S2
+  excerpt: |-
+    2025 年谷歌官方实测披露，其 Gemini 模型的单次文本提示能耗中位数已降至约 0.26 Wh
+  status: verified
+- id: C03
+  text: 2024 年全球数据中心用电约 415 太瓦时
+  value: 415
+  unit: 太瓦时
+  year: 2024
+  kind: estimated
+  scope: IEA 对全球数据中心用电的估算，不是只统计人工智能
+  source: S3
+  excerpt: |-
+    2024 年全球数据中心的电力消耗约为 415 太瓦时（TWh）
+  status: verified
+- id: C04
+  text: IEA 基准情景下，2030 年全球数据中心用电预计达到 945 太瓦时
+  value: 945
+  unit: 太瓦时
+  year: 2030
+  kind: projected
+  scope: IEA《Energy and AI》基准情景（Base Case），全球数据中心
+  source: S3
+  excerpt: |-
+    在 IEA 设定的基准情景（Base Case）下，全球数据中心用电量到 2030 年预计将达到 945 TWh
+  status: verified
+- id: C05
+  text: LBNL 预测美国数据中心 2028 年用电 325 至 580 太瓦时
+  value: 325-580
+  unit: 太瓦时
+  year: 2028
+  kind: projected
+  scope: LBNL 2024 年报告对美国数据中心用电量的预测区间
+  source: S4
+  excerpt: |-
+    美国数据中心用电量预计到 2028 年将达到 325 至 580 TWh
+  status: verified
+- id: C06
+  text: 上述预测占美国电力总需求的 6.7% 至 12%
+  value: 6.7-12
+  unit: '%'
+  year: 2028
+  kind: projected
+  scope: LBNL 预测区间对应的美国电力总需求占比
+  source: S4
+  excerpt: |-
+    占全国电力总需求的 6.7% 至 12%
+  status: verified
+- id: C07
+  text: EPRI 预测 2030 年美国数据中心用电占全国的 4.6% 至 9.1%
+  value: 4.6-9.1
+  unit: '%'
+  year: 2030
+  kind: projected
+  scope: EPRI 对美国数据中心占全美用电比重的预测区间
+  source: S5
+  excerpt: |-
+    到 2030 年美国数据中心的耗电量将占全美电网总需求的 4.6% 到 9.1%
+  status: verified
+- id: C08
+  text: 2023 年中国数据中心用电约 1500 亿千瓦时
+  value: 1500
+  unit: 亿千瓦时
+  year: 2023
+  kind: estimated
+  scope: 《中国能源报》援引中国信通院，中国数据中心
+  source: S11
+  excerpt: |-
+    2023 年中国数据中心用电量约 1500 亿千瓦时
+  status: verified
+- id: C09
+  text: 2023 年中国数据中心用电约占全社会用电 1.6%
+  value: '1.6'
+  unit: '%'
+  year: 2023
+  kind: estimated
+  scope: 同一口径下，中国数据中心占全社会总用电量的比重
+  source: S11
+  excerpt: |-
+    占全社会总用电量的 1.6%
+  status: verified
+- id: C10
+  text: 2025 年全国算力中心总用电量 1700 亿千瓦时
+  value: 1700
+  unit: 亿千瓦时
+  year: 2025
+  kind: measured
+  scope: 国家能源局披露的全国算力中心总用电量
+  source: S12
+  excerpt: |-
+    全国算力中心总用电量达 1700 亿千瓦时
+  status: verified
+- id: C11
+  text: 已建成 42 个万卡级智算集群
+  value: 42
+  unit: 个
+  year: 2025
+  kind: measured
+  scope: 国家能源局披露的已建成万卡级智算集群数量
+  source: S12
+  excerpt: |-
+    我国已建成 42 个万卡级智算集群
+  status: verified
+- id: C12
+  text: 中国信通院预测 2030 年中国数据中心用电或超过 7000 亿千瓦时
+  value: 7000
+  unit: 亿千瓦时
+  year: 2030
+  kind: projected
+  scope: 新华网援引中国信通院的预测；原文是“或将超过”，不是已经确定的数值
+  source: S13
+  excerpt: |-
+    我国数据中心用电量或将超过 7000 亿千瓦时
+  status: verified
+- id: C13
+  text: 2027 年全球 AI 取水量预计为 42 亿至 66 亿立方米
+  value: 42-66
+  unit: 亿立方米
+  year: 2027
+  kind: projected
+  scope: Li 等人对全球 AI 需求带来的水资源取水量的预测；原报告未在正文展开具体情景
+  source: S9
+  excerpt: |-
+    到 2027 年，全球 AI 需求带来的水资源取水量（Water Withdrawal）预计将达到 42 亿至 66 亿立方米
+  status: verified
+- id: C14
+  text: PJM 2025/2026 容量拍卖对比的上一年度价格为 28.92 美元/兆瓦-日
+  value: '28.92'
+  unit: 美元/兆瓦-日
+  year: null
+  kind: measured
+  scope: PJM 2025/2026 拍卖公告里作为对照的上一年度价格；原文没有写出那个交付年的年份
+  source: S6
+  excerpt: |-
+    RTO 区域清算价格从上一年度的 28.92 美元/兆瓦-日大幅上涨至 269.92 美元/兆瓦-日
+  status: verified
+- id: C15
+  text: PJM 2025/2026 容量拍卖价格为 269.92 美元/兆瓦-日
+  value: '269.92'
+  unit: 美元/兆瓦-日
+  year: 2025/2026
+  kind: measured
+  scope: PJM 2025/2026 年度容量市场拍卖，报告所列区域的清算价格
+  source: S6
+  excerpt: |-
+    RTO 区域清算价格从上一年度的 28.92 美元/兆瓦-日大幅上涨至 269.92 美元/兆瓦-日
+  status: verified
+- id: C16
+  text: 机组退役使提交拍卖的可用供应量减少约 6600 兆瓦
+  value: 6600
+  unit: 兆瓦
+  year: 2025/2026
+  kind: estimated
+  scope: PJM 官方公告所述、由发电机组退役导致的可用供应量减少；原文带“约”
+  source: S6
+  excerpt: |-
+    使得向拍卖提交的可用供应量减少了约 6600 MW
+  status: verified
+- id: C17
+  text: 天然气联合循环未补贴 LCOE 为 48–109 美元/兆瓦时
+  value: 48-109
+  unit: 美元/兆瓦时
+  year: 2025
+  kind: estimated
+  scope: Lazard LCOE+ v18.0 未补贴测算，天然气联合循环
+  source: S7
+  excerpt: |-
+    LCOE 约为 \$48 – \$109 / MWh
+  status: verified
+- id: C18
+  text: 天然气调峰电厂未补贴 LCOE 为 149–251 美元/兆瓦时
+  value: 149-251
+  unit: 美元/兆瓦时
+  year: 2025
+  kind: estimated
+  scope: Lazard LCOE+ v18.0 未补贴测算，天然气调峰电厂
+  source: S7
+  excerpt: |-
+    LCOE 约为 \$149 – \$251 / MWh
+  status: verified
+- id: C19
+  text: 新建煤电未补贴 LCOE 为 71–173 美元/兆瓦时
+  value: 71-173
+  unit: 美元/兆瓦时
+  year: 2025
+  kind: estimated
+  scope: Lazard LCOE+ v18.0 未补贴测算，新建煤电
+  source: S7
+  excerpt: |-
+    新建煤电的 LCOE 约为 \$71 – \$173 / MWh
+  status: verified
+- id: C20
+  text: 新建核电未补贴 LCOE 为 141–220 美元/兆瓦时
+  value: 141-220
+  unit: 美元/兆瓦时
+  year: 2025
+  kind: estimated
+  scope: Lazard LCOE+ v18.0 未补贴测算，传统大型新建核电
+  source: S7
+  excerpt: |-
+    约为 \$141 – \$220 / MWh
+  status: verified
+- id: C21
+  text: 公用事业光伏未补贴 LCOE 为 38–78 美元/兆瓦时
+  value: 38-78
+  unit: 美元/兆瓦时
+  year: 2025
+  kind: estimated
+  scope: Lazard LCOE+ v18.0 未补贴测算，公用事业级光伏
+  source: S7
+  excerpt: |-
+    LCOE 约为 \$38 – \$78 / MWh
+  status: verified
+- id: C22
+  text: 陆上风电未补贴 LCOE 为 37–86 美元/兆瓦时
+  value: 37-86
+  unit: 美元/兆瓦时
+  year: 2025
+  kind: estimated
+  scope: Lazard LCOE+ v18.0 未补贴测算，陆上风电
+  source: S7
+  excerpt: |-
+    LCOE 约为 \$37 – \$86 / MWh
+  status: verified
+- id: C23
+  text: 光伏加储能未补贴 LCOE 为 50–131 美元/兆瓦时
+  value: 50-131
+  unit: 美元/兆瓦时
+  year: 2025
+  kind: estimated
+  scope: Lazard LCOE+ v18.0 未补贴测算，光伏加储能
+  source: S7
+  excerpt: |-
+    光伏+储能的 LCOE 会上升至 \$50 – \$131 / MWh
+  status: verified
+- id: C24
+  text: 风电加储能未补贴 LCOE 为 44–123 美元/兆瓦时
+  value: 44-123
+  unit: 美元/兆瓦时
+  year: 2025
+  kind: estimated
+  scope: Lazard LCOE+ v18.0 未补贴测算，风电加储能
+  source: S7
+  excerpt: |-
+    风电+储能则为 \$44 – \$123 / MWh
+  status: verified
+- id: C25
+  text: 地热能未补贴 LCOE 为 66–109 美元/兆瓦时
+  value: 66-109
+  unit: 美元/兆瓦时
+  year: 2025
+  kind: estimated
+  scope: Lazard LCOE+ v18.0 未补贴测算，地热能
+  source: S7
+  excerpt: |-
+    LCOE 约为 \$66 – \$109 / MWh
+  status: verified
+- id: C26
+  text: DeepSeek-V3 模型总参数量为 6710 亿
+  value: 6710
+  unit: 亿
+  year: 2024
+  kind: measured
+  scope: DeepSeek-V3 技术报告中的模型总参数量
+  source: S8
+  excerpt: |-
+    DeepSeek-V3 的模型总参数量高达 6710 亿（671B）
+  status: verified
+- id: C27
+  text: DeepSeek-V3 每个词元激活的参数为 370 亿
+  value: 370
+  unit: 亿
+  year: 2024
+  kind: measured
+  scope: DeepSeek-V3 在混合专家架构下，每个词元激活的参数量
+  source: S8
+  excerpt: |-
+    只会精准激活最相关的 370 亿（37B）参数
+  status: verified
+- id: C28
+  text: 年限电率 0.25% 时，美国电网或可接入 76 吉瓦新灵活负荷
+  value: 76
+  unit: 吉瓦
+  year: 2025
+  kind: estimated
+  scope: Duke 大学 2025 年报告的测算；须接受每年 0.25% 时间限电降载，不是无条件容量
+  source: S10
+  excerpt: |-
+    如果新建负荷能够接受每年 0.25% 的时间被限电降载（Curtailment），电网即可在无需大规模扩建的情况下接入 76 GW 的新负荷
+  status: verified
+- id: C29
+  text: 年限电率 0.5% 时，美国电网或可接入 98 吉瓦新灵活负荷
+  value: 98
+  unit: 吉瓦
+  year: 2025
+  kind: estimated
+  scope: 同一报告的测算；须接受每年 0.5% 时间限电降载
+  source: S10
+  excerpt: |-
+    若可接受 0.5% 的年限电率，可接入 98 GW
+  status: verified
+- id: C30
+  text: 年限电率 1.0% 时，美国电网或可接入 126 吉瓦新灵活负荷
+  value: 126
+  unit: 吉瓦
+  year: 2025
+  kind: estimated
+  scope: 同一报告的测算；须接受每年 1.0% 时间限电降载
+  source: S10
+  excerpt: |-
+    若接受 1.0% 的限电率，则可高达 126 GW
+  status: verified

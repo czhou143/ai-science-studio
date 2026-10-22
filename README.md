@@ -45,10 +45,10 @@ ai-science-studio/
 
 ### 1. 安装依赖
 
-本项目仅需安装 `markdown` 解析库：
+安装构建、证据检查和视频渲染用到的库：
 
 ```bash
-pip install markdown
+pip install -r requirements.txt
 ```
 
 ### 2. 执行构建
@@ -67,7 +67,48 @@ python build.py
 
 构建完成后，控制台将输出生成的静态文件路径。
 
-### 3. 本地预览
+正文可以写主张编号 `[C01]`。`build.py` 会按 `claims.yaml` 把它画成对应来源的 `[S1]` 链接。同一处连续几个主张如果指向同一个来源，页面上仍然只显示一个来源链接。
+
+### 3. 检查证据包
+
+```bash
+python check.py issue01
+```
+
+脚本读取该期的 `claims.yaml`、`article.md`、`data.csv`、`sources.csv` 和分镜（如果已经写了），把结果写到 `content/issue01/review.md`。有 ERROR 时退出码为 1。WARN（草稿主张、没人引用的主张、早于 2020 年的年份）不会让退出码变成 1。
+
+### 4. 渲染竖版视频
+
+视频不进 git。成片写到 `out/`，该目录和 `*.mp4` 已在 `.gitignore` 里。
+
+依赖除了上面的 Python 包，还要：
+
+1. 本机可执行的 `ffmpeg` 和 `ffprobe`（官方构建，加入 PATH）。
+2. Playwright 的 Chromium：
+
+```bash
+python -m playwright install chromium
+```
+
+然后在项目根目录执行：
+
+```bash
+python video/render.py issue01
+```
+
+只想先听时长、不截帧：
+
+```bash
+python video/render.py issue01 --audio-only
+```
+
+脚本用分镜里的 `voice`（默认 `zh-CN-YunxiNeural`）调用免费的 edge-tts，不需要 API key，但需要能访问网络。旁白里的数字写成 `{C01}`、`{C01.unit}`、`{C01.year}`，由 `claims.yaml` 填入；未核实的主张不能进旁白。镜头时长是配音长度再加 `tail_seconds`（默认 0.5 秒）。字幕来自 TTS 返回的词级时间，写成 `out/issue01-vertical.srt`，并叠在画面底部。空镜如果找不到分镜里的素材，会改用 `static/img/<issue>-cover-vertical.jpg` 和 `static/img/<issue>-cover.jpg`。
+
+> **Windows：** 用 Python 3.12 解释器运行，例如
+> `& "C:\Users\dell\AppData\Local\Programs\Python\Python312\python.exe" video\render.py issue01`
+> 不要用 `python` 打开应用商店，也不要用损坏的 `py`。脚本只用 `pathlib` 和参数列表调用 ffmpeg，文件以 UTF-8 读写。
+
+### 5. 本地预览
 
 可以直接在文件管理器中双击，或通过浏览器打开：
 - 首页：`docs/index.html`

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    main {
+      position: absolute;
+      inset: 0;
+      padding: 220px 96px 280px 112px;
+      z-index: 2;
+    }
+    .kicker {
+      margin: 0 0 28px;
+      font-size: 32px;
+      letter-spacing: 0.18em;
+      color: var(--paper);
+    }
+    .bar {
+      width: 88px;
+      height: 8px;
+      background: var(--orange);
+      margin-bottom: 40px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 92px;
+      font-weight: 700;
+      line-height: 1.28;
+      letter-spacing: 0.02em;
+    }
+    h1.long {
+      font-size: 64px;
+      line-height: 1.4;
+    }
+    .deck {
+      margin: 48px 0 0;
+      font-size: 40px;
+      line-height: 1.5;
+      color: rgba(247, 244, 236, 0.78);
+    }
+    .deck:empty { display: none; }
+  </style>
+</head>
+<body>
+  <div class="rail"></div>
+  <div class="grain"></div>
+  <main>
+    <p class="kicker" data-rise>__KICKER__</p>
+    <div class="bar" data-rise></div>
+    <h1 class="__TITLE_CLASS__" data-rise>__TEXT__</h1>
+    <p class="deck" data-rise>__SUBTITLE__</p>
+  </main>
+  <p id="sub" class="subtitle"></p>
+  <script>
+    window.__cues = __CUES__;
+    window.__duration = __DURATION__;
+    function applyCue(t) {
+      var cues = window.__cues || [];
+      var text = "";
+      for (var i = 0; i < cues.length; i++) {
+        if (t >= cues[i].start && t < cues[i].end) {
+          text = cues[i].text;
+          break;
+        }
+      }
+      var node = document.getElementById("sub");
+      node.textContent = text;
+      node.style.display = text ? "block" : "none";
+    }
+    window.setRenderTime = function (t) {
+      applyCue(t);
+      var intro = Math.max(0, Math.min(1, t / 0.5));
+      var nodes = document.querySelectorAll("[data-rise]");
+      for (var i = 0; i < nodes.length; i++) {
+        nodes[i].style.opacity = String(0.15 + 0.85 * intro);
+        nodes[i].style.transform = "translateY(" + ((1 - intro) * 36) + "px)";
+      }
+    };
+  </script>
+</body>
+</html>
