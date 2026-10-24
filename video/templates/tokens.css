@@ -5,7 +5,9 @@
   --orange: #B5452F;
   --paper: #F7F4EC;
   --gray: #5B6475;
-  --font: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", "WenQuanYi Micro Hei", "Droid Sans Fallback", sans-serif;
+  --sans: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", "Noto Sans SC", "WenQuanYi Micro Hei", "Droid Sans Fallback", sans-serif;
+  --serif: "Noto Serif CJK SC", "Noto Serif SC", "Songti SC", "SimSun", serif;
+  --font: var(--sans);
 }
 
 * { box-sizing: border-box; }

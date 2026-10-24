@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    html, body { background: var(--navy); }
+    body { font-family: var(--sans); font-weight: 500; }
+    .serif { font-family: var(--serif); }
+
+    header {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 156px;
+      padding: 46px 80px 0;
+      z-index: 5;
+      box-sizing: border-box;
+    }
+    header:after {
+      content: "";
+      position: absolute;
+      left: 80px; right: 80px; bottom: 0;
+      height: 2px;
+      background: rgba(247, 244, 236, 0.16);
+    }
+    .brand {
+      margin: 0;
+      font-size: 26px;
+      line-height: 1;
+      letter-spacing: 0.2em;
+      color: rgba(247, 244, 236, 0.86);
+    }
+    .brand i {
+      display: inline-block;
+      width: 14px; height: 14px;
+      margin-right: 14px;
+      background: var(--orange);
+      vertical-align: -1px;
+    }
+    .ticks { display: flex; gap: 10px; margin-top: 26px; height: 8px; }
+    .tick { flex: 1; background: rgba(247, 244, 236, 0.14); position: relative; overflow: hidden; }
+    .tick b {
+      position: absolute; left: 0; top: 0; bottom: 0; width: 100%;
+      background: var(--orange);
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    #stage {
+      position: absolute;
+      top: 180px; left: 80px; right: 80px; bottom: 318px;
+      z-index: 2;
+    }
+    .scene { position: absolute; inset: 0; opacity: 0; }
+
+    .subwrap {
+      position: absolute;
+      left: 96px; right: 96px; bottom: 78px;
+      height: 190px;
+      z-index: 6;
+      text-align: center;
+    }
+    .submark {
+      width: 48px; height: 6px;
+      margin: 0 auto 18px;
+      background: var(--orange);
+    }
+    #sub {
+      margin: 0;
+      font-size: 44px;
+      line-height: 1.35;
+      font-weight: 500;
+      color: var(--paper);
+    }
+
+    .opener, .split, .bars, .race, .sparse, .lines, .end { height: 100%; }
+    .opener { display: flex; flex-direction: column; }
+    .opener h1 {
+      margin: 8px 0 0;
+      font-family: var(--serif);
+      font-size: 84px;
+      font-weight: 700;
+      line-height: 1.16;
+      letter-spacing: 0.01em;
+    }
+    .opener .deck {
+      margin: 26px 0 0;
+      font-size: 36px;
+      line-height: 1.4;
+      color: rgba(247, 244, 236, 0.72);
+    }
+    .opener .art { flex: 1; min-height: 0; margin-top: 8px; }
+    .opener svg, .bars svg, .race svg { width: 100%; height: 100%; display: block; }
+
+    .split { display: flex; flex-direction: column; justify-content: center; }
+    .split-row { display: flex; gap: 32px; align-items: stretch; }
+    .card {
+      flex: 1;
+      box-sizing: border-box;
+      border: 2px solid rgba(247, 244, 236, 0.28);
+      border-top: 8px solid rgba(247, 244, 236, 0.82);
+      background: rgba(247, 244, 236, 0.035);
+      min-height: 760px;
+      padding: 56px 28px 44px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .card.measured { border-top-color: var(--blue); }
+    .badge {
+      margin: 0;
+      padding: 8px 18px 7px;
+      font-size: 26px;
+      letter-spacing: 0.16em;
+      border: 2px solid rgba(247, 244, 236, 0.75);
+      color: var(--paper);
+    }
+    .badge.measured { background: var(--blue); border-color: var(--blue); }
+    .badge.projected { color: var(--orange); border-color: var(--orange); }
+    .card .year {
+      margin: 40px 0 0;
+      font-family: var(--serif);
+      font-size: 40px;
+      color: rgba(247, 244, 236, 0.78);
+    }
+    .card .num {
+      margin-top: 18px;
+      font-family: var(--serif);
+      font-size: 148px;
+      font-weight: 700;
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+    }
+    .card .unit {
+      margin-top: 18px;
+      font-size: 32px;
+      letter-spacing: 0.12em;
+      color: rgba(247, 244, 236, 0.75);
+    }
+    .card .label { margin: auto 0 0; font-size: 32px; }
+    .card .src { margin: 14px 0 0; font-size: 24px; color: rgba(247, 244, 236, 0.5); }
+    .stamp-line {
+      margin: 36px 0 0;
+      text-align: center;
+      font-family: var(--serif);
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--orange);
+    }
+    .footnote {
+      margin: 22px 0 0;
+      text-align: center;
+      font-size: 32px;
+      color: rgba(247, 244, 236, 0.78);
+    }
+
+    .bars { display: flex; flex-direction: column; }
+    .bars .chart-title {
+      margin: 8px 0 0;
+      text-align: center;
+      font-family: var(--serif);
+      font-size: 40px;
+      font-weight: 700;
+    }
+    .bars .chart { flex: 1; min-height: 0; }
+    .bars .note, .sparse .note {
+      margin: 10px 0 0;
+      text-align: center;
+      font-size: 32px;
+      line-height: 1.4;
+      color: rgba(247, 244, 236, 0.82);
+    }
+    .bars .src, .sparse .src {
+      margin: 12px 0 18px;
+      text-align: center;
+      font-size: 24px;
+      color: rgba(247, 244, 236, 0.5);
+    }
+    .bars svg text { font-family: var(--serif); fill: var(--paper); }
+    .bars svg text.sans { font-family: var(--sans); }
+    .bars svg text.dim { fill: rgba(247, 244, 236, 0.72); }
+    .bars svg text.accent { fill: var(--orange); }
+
+    .race {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 132px 1fr;
+      grid-template-rows: auto 1fr auto;
+      column-gap: 8px;
+    }
+    .race h2 {
+      margin: 4px 0 8px;
+      font-family: var(--serif);
+      font-size: 48px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .race .art { min-height: 0; }
+    .race .tag {
+      margin: 12px 0 0;
+      text-align: center;
+      font-size: 28px;
+      line-height: 1.35;
+      color: rgba(247, 244, 236, 0.78);
+    }
+    .race .mid {
+      grid-column: 2;
+      grid-row: 1 / span 3;
+      align-self: center;
+      margin: 0;
+      text-align: center;
+      font-family: var(--serif);
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: 0.12em;
+      color: var(--orange);
+      white-space: pre-line;
+    }
+    .race .lt, .race .la, .race .lg { grid-column: 1; }
+    .race .rt, .race .ra, .race .rg { grid-column: 3; }
+    .race .lt, .race .rt { grid-row: 1; }
+    .race .la, .race .ra { grid-row: 2; }
+    .race .lg, .race .rg { grid-row: 3; }
+
+    .sparse { display: flex; flex-direction: column; justify-content: center; }
+    .pair { display: flex; }
+    .pair .col { flex: 1; }
+    .pair .col.right { text-align: right; }
+    .pair .num {
+      font-family: var(--serif);
+      font-size: 108px;
+      font-weight: 700;
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+    }
+    .pair .col.right .num { color: var(--orange); }
+    .pair .unit {
+      margin-left: 10px;
+      font-size: 32px;
+      letter-spacing: 0.08em;
+      color: rgba(247, 244, 236, 0.72);
+    }
+    .pair .label {
+      margin: 14px 0 0;
+      font-size: 30px;
+      color: rgba(247, 244, 236, 0.78);
+    }
+    .gridwrap { margin-top: 48px; }
+    .gridwrap svg { width: 100%; height: auto; display: block; }
+    .sparse .note {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 14px;
+      margin-top: 28px;
+      text-align: left;
+    }
+    .sparse .note i {
+      width: 18px; height: 18px;
+      background: var(--orange);
+      flex: none;
+    }
+
+    .lines { display: flex; flex-direction: column; justify-content: center; }
+    .lines h2 {
+      margin: 0 0 56px;
+      font-size: 30px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      color: rgba(247, 244, 236, 0.66);
+    }
+    .lines ul { list-style: none; margin: 0; padding: 0; }
+    .lines li {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      margin: 0 0 52px;
+      font-family: var(--serif);
+      font-size: 58px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .lines li:last-child { margin-bottom: 0; }
+    .lines li i {
+      width: 18px; height: 18px;
+      background: var(--orange);
+      flex: none;
+    }
+
+    .end {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .end .kicker {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 0.24em;
+      color: rgba(247, 244, 236, 0.62);
+    }
+    .end .rule { width: 56px; height: 6px; margin: 32px 0; background: var(--orange); }
+    .end .disclosure {
+      margin: 0;
+      max-width: 860px;
+      font-family: var(--serif);
+      font-size: 52px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="grain"></div>
+  <header>
+    <p class="brand"><i></i>AI 科普工作室</p>
+    <div class="ticks" id="ticks"></div>
+  </header>
+  <div id="stage"></div>
+  <div class="subwrap">
+    <div class="submark" id="submark"></div>
+    <p id="sub"></p>
+  </div>
+  <script>
+    window.__film = __FILM__;
+    var SVGNS = "http://www.w3.org/2000/svg";
+    var PAPER = "#F7F4EC";
+    var ORANGE = "#B5452F";
+    var BLUE = "#1F6E8C";
+    var NAVY = "#1B2A41";
+
+    function clamp01(x) { return Math.max(0, Math.min(1, x)); }
+    function ease(x) { x = clamp01(x); return 1 - Math.pow(1 - x, 3); }
+    function seg(t, a, b) { return ease((t - a) / (b - a)); }
+    function S(tag, attrs) {
+      var n = document.createElementNS(SVGNS, tag);
+      attrs = attrs || {};
+      Object.keys(attrs).forEach(function (k) {
+        if (attrs[k] === undefined || attrs[k] === null) return;
+        n.setAttribute(k, String(attrs[k]));
+      });
+      return n;
+    }
+    function cueStart(cues, key, fallback) {
+      if (!cues || !key) return fallback;
+      for (var i = 0; i < cues.length; i++) {
+        if (cues[i].text.indexOf(key) >= 0) return cues[i].start;
+      }
+      return fallback;
+    }
+    function cueText(cues, t) {
+      if (!cues || !cues.length) return "";
+      var last = "";
+      for (var i = 0; i < cues.length; i++) {
+        if (t + 1e-4 >= cues[i].start) last = cues[i].text;
+        if (t >= cues[i].start && t < cues[i].end) return cues[i].text;
+      }
+      return last;
+    }
+    function prepDraw(path) {
+      var len = path.getTotalLength();
+      path._len = len;
+      path.setAttribute("stroke-dasharray", String(len));
+      path.setAttribute("stroke-dashoffset", String(len));
+    }
+    function drawTo(path, p) {
+      var len = path._len || 0;
+      path.setAttribute("stroke-dashoffset", String(len * (1 - clamp01(p))));
+    }
+    function stackFour(text) {
+      if (!text || text.length !== 4) return text || "";
+      return text.slice(0, 2) + "\n" + text.slice(2);
+    }
+
+    function makeSvg(viewBox) {
+      return S("svg", { viewBox: viewBox, preserveAspectRatio: "xMidYMid meet" });
+    }
+
+    function addRack(parent, w, h) {
+      var g = S("g");
+      g.appendChild(S("rect", {
+        x: 0, y: 0, width: w, height: h,
+        fill: "rgba(247,244,236,0.05)", stroke: PAPER, "stroke-width": 3
+      }));
+      g.appendChild(S("rect", {
+        x: 0, y: 0, width: w, height: 22, fill: "rgba(247,244,236,0.1)"
+      }));
+      var leds = [];
+      var ly = 46;
+      for (var i = 0; i < 7; i++) {
+        g.appendChild(S("rect", {
+          x: (w - 16) / 2, y: ly, width: 16, height: 10,
+          fill: "rgba(247,244,236,0.16)"
+        }));
+        var on = S("rect", {
+          x: (w - 16) / 2, y: ly, width: 16, height: 10,
+          fill: ORANGE, opacity: 0
+        });
+        g.appendChild(on);
+        leds.push(on);
+        ly += 34;
+      }
+      parent.appendChild(g);
+      return { g: g, leds: leds };
+    }
+
+    function towerD(x, base, w, h) {
+      var ax = x + w / 2;
+      var top = base - h;
+      return [
+        "M " + x + " " + base + " L " + ax + " " + top,
+        "M " + (x + w) + " " + base + " L " + ax + " " + top,
+        "M " + (x + w * 0.22) + " " + (base - h * 0.36) + " L " + (x + w * 0.78) + " " + (base - h * 0.36),
+        "M " + (x + w * 0.32) + " " + (base - h * 0.64) + " L " + (x + w * 0.68) + " " + (base - h * 0.64),
+        "M " + (ax - w * 0.42) + " " + top + " L " + (ax + w * 0.42) + " " + top
+      ].join(" ");
+    }
+
+    function addTower(parent, x, base, w, h) {
+      var path = S("path", {
+        d: towerD(x, base, w, h),
+        fill: "none", stroke: PAPER, "stroke-width": 3,
+        "stroke-linecap": "round", "stroke-linejoin": "round"
+      });
+      parent.appendChild(path);
+      return path;
+    }
+
+    function addStation(parent, x, y, w, h, dashed) {
+      var g = S("g");
+      g.appendChild(S("rect", {
+        x: x, y: y, width: w, height: h,
+        fill: dashed ? "none" : "rgba(247,244,236,0.04)",
+        stroke: PAPER, "stroke-width": 3,
+        "stroke-dasharray": dashed ? "7 8" : "none",
+        opacity: dashed ? 0.55 : 1
+      }));
+      [0.35, 0.65].forEach(function (p) {
+        g.appendChild(S("circle", {
+          cx: x + w * p, cy: y, r: 8,
+          fill: NAVY, stroke: PAPER, "stroke-width": 3,
+          opacity: dashed ? 0.55 : 1
+        }));
+      });
+      parent.appendChild(g);
+      return g;
+    }
+
+    function buildOpener(root, scene) {
+      var title = document.createElement("h1");
+      var parts = (scene.title || "").split("，");
+      if (parts.length > 1) {
+        title.appendChild(document.createTextNode(parts[0]));
+        title.appendChild(document.createElement("br"));
+        title.appendChild(document.createTextNode(parts.slice(1).join("，")));
+      } else {
+        title.textContent = scene.title || "";
+      }
+      var deck = document.createElement("p");
+      deck.className = "deck";
+      deck.textContent = scene.deck || "";
+      var art = document.createElement("div");
+      art.className = "art";
+      var svg = makeSvg("0 0 920 1000");
+      art.appendChild(svg);
+      root.appendChild(title);
+      root.appendChild(deck);
+      root.appendChild(art);
+
+      var wire = S("path", {
+        d: "M 127 170 Q 400 36 721 468 M 287 180 Q 540 150 766 468",
+        fill: "none", stroke: PAPER, "stroke-width": 3, "stroke-linecap": "round"
+      });
+      svg.appendChild(wire);
+      var towerA = addTower(svg, 90, 430, 74, 260);
+      var towerB = addTower(svg, 250, 460, 74, 280);
+      var station = addStation(svg, 668, 468, 150, 112, false);
+      var power = S("path", {
+        d: "M 743 580 L 743 628 L 168 628",
+        fill: "none", stroke: ORANGE, "stroke-width": 12, "stroke-linecap": "square", "stroke-linejoin": "miter"
+      });
+      svg.appendChild(power);
+
+      var racks = [];
+      var drops = [];
+      var x0 = 168, rw = 96, gap = 22, rh = 292, base = 948;
+      for (var i = 0; i < 5; i++) {
+        var rack = addRack(svg, rw, rh);
+        var x = x0 + i * (rw + gap);
+        rack.g.setAttribute("transform", "translate(" + x + " " + (base - rh) + ")");
+        rack.x = x;
+        racks.push(rack);
+        var drop = S("rect", {
+          x: x + rw / 2 - 3, y: 628, width: 6, height: base - rh - 628,
+          fill: ORANGE, opacity: 0
+        });
+        svg.appendChild(drop);
+        drops.push(drop);
+      }
+      svg.appendChild(S("line", {
+        x1: 140, y1: 956, x2: 820, y2: 956,
+        stroke: PAPER, "stroke-width": 2, opacity: 0.35
+      }));
+
+      root._title = title;
+      root._deck = deck;
+      root._wire = wire;
+      root._towers = [towerA, towerB];
+      root._power = power;
+      root._racks = racks;
+      root._drops = drops;
+      root._station = station;
+    }
+
+    function updateOpener(root, t) {
+      root._title.style.opacity = "1";
+      root._deck.style.opacity = String(seg(t, 0.05, 0.35));
+      [root._wire].concat(root._towers).forEach(function (path) {
+        if (!path._len) prepDraw(path);
+      });
+      var draw = seg(t, 0.12, 0.85);
+      drawTo(root._wire, draw);
+      root._towers.forEach(function (path) { drawTo(path, draw); });
+      root._station.style.opacity = String(seg(t, 0.2, 0.5));
+      if (!root._power._len) prepDraw(root._power);
+      drawTo(root._power, seg(t, 0.55, 1.25));
+      root._racks.forEach(function (rack, i) {
+        var p = seg(t, 0.08 + i * 0.05, 0.32 + i * 0.05);
+        rack.g.style.opacity = String(p);
+      });
+      root._drops.forEach(function (drop, i) {
+        drop.setAttribute("opacity", String(seg(t, 1.05 + i * 0.06, 1.28 + i * 0.06)));
+      });
+      var flat = [];
+      root._racks.forEach(function (rack) {
+        rack.leds.forEach(function (led) { flat.push(led); });
+      });
+      flat.forEach(function (led, i) {
+        var p = seg(t, 1.2 + i * 0.028, 1.38 + i * 0.028);
+        led.setAttribute("opacity", String(p));
+      });
+    }
+
+    function buildSplit(root, scene) {
+      var row = document.createElement("div");
+      row.className = "split-row";
+      row.appendChild(cardEl(scene.left, scene.leftLabel));
+      row.appendChild(cardEl(scene.right, scene.rightLabel));
+      var stamp = document.createElement("p");
+      stamp.className = "stamp-line";
+      stamp.textContent = scene.stamp || "";
+      var note = document.createElement("p");
+      note.className = "footnote";
+      note.textContent = scene.footnote || "";
+      root.appendChild(row);
+      root.appendChild(stamp);
+      root.appendChild(note);
+      root._row = row;
+      root._stamp = stamp;
+      root._note = note;
+    }
+
+    function cardEl(card, label) {
+      var node = document.createElement("article");
+      node.className = "card " + (card && card.kind ? card.kind : "");
+      var badge = document.createElement("p");
+      badge.className = "badge " + (card ? card.kind : "");
+      badge.textContent = card ? card.kindLabel : "";
+      var year = document.createElement("p");
+      year.className = "year";
+      year.textContent = card ? card.year : "";
+      var num = document.createElement("div");
+      num.className = "num";
+      num.textContent = card ? card.value : "";
+      var unit = document.createElement("div");
+      unit.className = "unit";
+      unit.textContent = card ? card.unit : "";
+      var cap = document.createElement("p");
+      cap.className = "label";
+      cap.textContent = label || "";
+      var src = document.createElement("p");
+      src.className = "src";
+      src.textContent = card && card.source ? "来源 " + card.source : "";
+      [badge, year, num, unit, cap, src].forEach(function (el) { node.appendChild(el); });
+      return node;
+    }
+
+    function updateSplit(root, t, dur, scene) {
+      var p = seg(t, 0.04, 0.36);
+      root._row.style.opacity = String(p);
+      root._row.style.transform = "translateY(" + ((1 - p) * 18) + "px)";
+      var at = cueStart(scene.cues, scene.stamp, 0.7);
+      var s = seg(t, at, at + 0.28);
+      root._stamp.style.opacity = String(s);
+      root._note.style.opacity = String(seg(t, at, at + 0.4));
+    }
+
+    function buildBars(root, scene) {
+      var title = document.createElement("p");
+      title.className = "chart-title";
+      title.textContent = scene.leftLabel || "";
+      var chart = document.createElement("div");
+      chart.className = "chart";
+      var svg = makeSvg("0 0 920 980");
+      chart.appendChild(svg);
+      var note = document.createElement("p");
+      note.className = "note";
+      note.textContent = scene.note || "";
+      var src = document.createElement("p");
+      src.className = "src";
+      var source = scene.left && scene.left.source ? scene.left.source : "";
+      src.textContent = source ? "来源 " + source : "";
+      root.appendChild(title);
+      root.appendChild(chart);
+      root.appendChild(note);
+      root.appendChild(src);
+
+      var base = 760;
+      var maxH = 500;
+      var maxV = Math.max(scene.left.number, scene.right.number);
+      svg.appendChild(S("line", {
+        x1: 120, y1: base, x2: 800, y2: base,
+        stroke: PAPER, "stroke-width": 2, opacity: 0.4
+      }));
+      function column(card, x, label, accent) {
+        var h = maxH * card.number / maxV;
+        var bar = S("rect", {
+          x: x - 84, y: base, width: 168, height: 0,
+          fill: accent ? "rgba(181,69,47,0.46)" : BLUE,
+          stroke: accent ? ORANGE : "none",
+          "stroke-width": accent ? 3 : 0
+        });
+        var num = S("text", {
+          x: x, y: base - h - 58, "text-anchor": "middle",
+          "font-size": 76, "font-weight": 700
+        });
+        num.textContent = card.value;
+        var unit = S("text", {
+          x: x, y: base - h - 18, "text-anchor": "middle",
+          "font-size": 28, class: "sans dim"
+        });
+        unit.textContent = card.unit;
+        var year = S("text", {
+          x: x, y: base + 58, "text-anchor": "middle",
+          "font-size": 40, "font-weight": 700
+        });
+        year.textContent = card.year;
+        var kind = S("text", {
+          x: x, y: base + 108, "text-anchor": "middle",
+          "font-size": 28, class: accent ? "sans accent" : "sans dim"
+        });
+        kind.textContent = label ? card.kindLabel + " · " + label : card.kindLabel;
+        svg.appendChild(bar);
+        svg.appendChild(num);
+        svg.appendChild(unit);
+        svg.appendChild(year);
+        svg.appendChild(kind);
+        return { bar: bar, num: num, unit: unit, year: year, kind: kind, h: h, x: x };
+      }
+      root._title = title;
+      root._left = column(scene.left, 300, "", false);
+      root._right = column(scene.right, 640, scene.rightLabel, true);
+      root._note = note;
+      root._base = base;
+    }
+
+    function grow(col, p, base) {
+      var h = Math.max(0, col.h * p);
+      col.bar.setAttribute("y", String(base - h));
+      col.bar.setAttribute("height", String(h));
+      var o = String(Math.min(1, p * 1.4));
+      col.num.setAttribute("opacity", o);
+      col.unit.setAttribute("opacity", o);
+      col.year.setAttribute("opacity", o);
+      col.kind.setAttribute("opacity", o);
+    }
+
+    function updateBars(root, t, dur, scene) {
+      root._title.style.opacity = String(seg(t, 0.02, 0.28));
+      var rightAt = Math.max(0.35, cueStart(scene.cues, scene.right.value, 0.5));
+      grow(root._left, seg(t, 0.1, 0.85), root._base);
+      grow(root._right, seg(t, rightAt, rightAt + 0.75), root._base);
+      root._note.style.opacity = String(seg(t, rightAt + 0.2, rightAt + 0.55));
+    }
+
+    function buildRace(root, scene) {
+      var lt = document.createElement("h2");
+      lt.className = "lt";
+      lt.textContent = scene.leftTitle || "";
+      var la = document.createElement("div");
+      la.className = "art la";
+      var lg = document.createElement("p");
+      lg.className = "tag lg";
+      lg.textContent = scene.leftTag || "";
+      var mid = document.createElement("p");
+      mid.className = "mid";
+      mid.textContent = stackFour(scene.stamp || "");
+      var rt = document.createElement("h2");
+      rt.className = "rt";
+      rt.textContent = scene.rightTitle || "";
+      var ra = document.createElement("div");
+      ra.className = "art ra";
+      var rg = document.createElement("p");
+      rg.className = "tag rg";
+      rg.textContent = scene.rightTag || "";
+      [lt, la, lg, mid, rt, ra, rg].forEach(function (el) { root.appendChild(el); });
+
+      var left = makeSvg("0 0 420 760");
+      la.appendChild(left);
+      var racks = [];
+      var x0 = 22, rw = 84, gap = 16, rh = 320, base = 680;
+      var bus = S("rect", { x: x0, y: 328, width: 4 * rw + 3 * gap, height: 14, fill: ORANGE });
+      left.appendChild(bus);
+      for (var i = 0; i < 4; i++) {
+        var rack = addRack(left, rw, rh);
+        var x = x0 + i * (rw + gap);
+        rack.g.setAttribute("transform", "translate(" + x + " " + (base - rh) + ")");
+        var drop = S("rect", {
+          x: x + rw / 2 - 3, y: 342, width: 6, height: base - rh - 342, fill: ORANGE
+        });
+        left.appendChild(drop);
+        rack.drop = drop;
+        racks.push(rack);
+      }
+      left.appendChild(S("line", {
+        x1: 12, y1: 696, x2: 408, y2: 696,
+        stroke: PAPER, "stroke-width": 2, opacity: 0.35
+      }));
+
+      var right = makeSvg("0 0 420 760");
+      ra.appendChild(right);
+      var t1 = addTower(right, 36, 300, 80, 210);
+      var t2 = addTower(right, 210, 280, 86, 220);
+      var ghost1 = S("path", {
+        d: "M 76 90 Q 24 300 204 520",
+        fill: "none", stroke: PAPER, "stroke-width": 3, opacity: 0.32,
+        "stroke-dasharray": "8 10", "stroke-linecap": "round"
+      });
+      var ghost2 = S("path", {
+        d: "M 253 60 Q 370 250 267 520",
+        fill: "none", stroke: PAPER, "stroke-width": 3, opacity: 0.32,
+        "stroke-dasharray": "8 10", "stroke-linecap": "round"
+      });
+      var live1 = S("path", {
+        d: "M 76 90 Q 24 300 204 520",
+        fill: "none", stroke: PAPER, "stroke-width": 3, "stroke-linecap": "round"
+      });
+      var live2 = S("path", {
+        d: "M 253 60 Q 370 250 267 520",
+        fill: "none", stroke: PAPER, "stroke-width": 3, "stroke-linecap": "round"
+      });
+      right.appendChild(ghost1);
+      right.appendChild(ghost2);
+      right.appendChild(live1);
+      right.appendChild(live2);
+      var station = addStation(right, 130, 520, 210, 150, true);
+      var stop = S("rect", { x: 0, y: 0, width: 18, height: 18, fill: ORANGE, opacity: 0 });
+      right.appendChild(stop);
+      right.appendChild(S("line", {
+        x1: 12, y1: 696, x2: 408, y2: 696,
+        stroke: PAPER, "stroke-width": 2, opacity: 0.35
+      }));
+
+      root._leftBits = { racks: racks, bus: bus, title: lt, tag: lg };
+      root._rightBits = { t1: t1, t2: t2, live1: live1, live2: live2, station: station, stop: stop, title: rt, tag: rg };
+      root._mid = mid;
+    }
+
+    function updateRace(root, t, dur, scene) {
+      var lp = seg(t, 0.05, 0.42);
+      root._leftBits.title.style.opacity = String(lp);
+      root._leftBits.tag.style.opacity = String(seg(t, 0.3, 0.55));
+      root._leftBits.bus.setAttribute("opacity", String(seg(t, 0.2, 0.45)));
+      root._leftBits.racks.forEach(function (rack, i) {
+        var p = seg(t, 0.08 + i * 0.05, 0.28 + i * 0.05);
+        rack.g.style.opacity = String(p);
+        rack.drop.setAttribute("opacity", String(seg(t, 0.35, 0.6)));
+        rack.leds.forEach(function (led) { led.setAttribute("opacity", String(seg(t, 0.4, 0.7))); });
+      });
+
+      var towers = [root._rightBits.t1, root._rightBits.t2, root._rightBits.live1, root._rightBits.live2];
+      towers.forEach(function (path) { if (!path._len) prepDraw(path); });
+      var td = seg(t, 0.15, 1.05);
+      drawTo(root._rightBits.t1, td);
+      drawTo(root._rightBits.t2, td);
+      var wireP = Math.min(0.7, seg(t, 0.35, 1.7));
+      drawTo(root._rightBits.live1, wireP);
+      drawTo(root._rightBits.live2, wireP);
+      root._rightBits.title.style.opacity = String(seg(t, 0.15, 0.4));
+      root._rightBits.tag.style.opacity = String(seg(t, 0.8, 1.15));
+      root._rightBits.station.style.opacity = String(seg(t, 0.4, 0.8));
+      if (wireP > 0.62 && root._rightBits.live1._len) {
+        var pt = root._rightBits.live1.getPointAtLength(root._rightBits.live1._len * 0.7);
+        root._rightBits.stop.setAttribute("x", String(pt.x - 9));
+        root._rightBits.stop.setAttribute("y", String(pt.y - 9));
+        root._rightBits.stop.setAttribute("opacity", String(seg(wireP, 0.62, 0.7)));
+      } else {
+        root._rightBits.stop.setAttribute("opacity", "0");
+      }
+      var at = cueStart(scene.cues, "电送", 1.05);
+      var mp = seg(t, at, at + 0.3);
+      root._mid.style.opacity = String(mp);
+    }
+
+    function buildSparse(root, scene) {
+      var pair = document.createElement("div");
+      pair.className = "pair";
+      pair.appendChild(statCol(scene.total, scene.totalLabel, false));
+      pair.appendChild(statCol(scene.active, scene.activeLabel, true));
+      var gridwrap = document.createElement("div");
+      gridwrap.className = "gridwrap";
+      var cols = 16, rows = 10, gap = 8, size = (920 - (cols - 1) * gap) / cols;
+      var svg = makeSvg("0 0 920 " + (rows * size + (rows - 1) * gap));
+      svg.setAttribute("preserveAspectRatio", "xMidYMin meet");
+      var ratio = scene.active.number / scene.total.number;
+      var litN = Math.max(1, Math.round(cols * rows * ratio));
+      var blockCols = Math.min(cols, Math.max(1, Math.round(Math.sqrt(litN))));
+      var cells = [];
+      var litCells = [];
+      var litLeft = 0;
+      for (var r = 0; r < rows; r++) {
+        for (var c = 0; c < cols; c++) {
+          var x = c * (size + gap);
+          var y = r * (size + gap);
+          var dim = S("rect", {
+            x: x, y: y, width: size, height: size,
+            fill: "rgba(247,244,236,0.08)",
+            stroke: "rgba(247,244,236,0.22)", "stroke-width": 1.5
+          });
+          svg.appendChild(dim);
+          cells.push(dim);
+          var inBlock = c >= cols - blockCols && r < Math.ceil(litN / blockCols);
+          if (inBlock && litLeft < litN) {
+            var on = S("rect", {
+              x: x, y: y, width: size, height: size, fill: ORANGE, opacity: 0
+            });
+            svg.appendChild(on);
+            litCells.push(on);
+            litLeft++;
+          }
+        }
+      }
+      gridwrap.appendChild(svg);
+      var note = document.createElement("p");
+      note.className = "note";
+      var swatch = document.createElement("i");
+      var words = document.createElement("span");
+      words.textContent = scene.note || "";
+      note.appendChild(swatch);
+      note.appendChild(words);
+      var src = document.createElement("p");
+      src.className = "src";
+      var year = scene.total && scene.total.year ? " · " + scene.total.year : "";
+      src.textContent = scene.total && scene.total.source ? "来源 " + scene.total.source + year : "";
+      root.appendChild(pair);
+      root.appendChild(gridwrap);
+      root.appendChild(note);
+      root.appendChild(src);
+      root._pair = pair;
+      root._cells = cells;
+      root._lit = litCells;
+      root._activeCol = pair.lastChild;
+      root._note = note;
+      root._src = src;
+    }
+
+    function statCol(card, label, right) {
+      var col = document.createElement("div");
+      col.className = "col" + (right ? " right" : "");
+      var num = document.createElement("div");
+      num.className = "num";
+      num.textContent = card ? card.value : "";
+      var unit = document.createElement("span");
+      unit.className = "unit";
+      unit.textContent = card ? card.unit : "";
+      num.appendChild(unit);
+      var cap = document.createElement("p");
+      cap.className = "label";
+      cap.textContent = label || "";
+      col.appendChild(num);
+      col.appendChild(cap);
+      return col;
+    }
+
+    function updateSparse(root, t, dur, scene) {
+      var p = seg(t, 0.04, 0.32);
+      root._pair.firstChild.style.opacity = String(p);
+      root._cells.forEach(function (cell) { cell.setAttribute("opacity", String(seg(t, 0.12, 0.4))); });
+      var at = Math.max(0.35, cueStart(scene.cues, scene.active.value, 0.8));
+      var lp = seg(t, at, at + 0.45);
+      root._activeCol.style.opacity = String(lp);
+      root._lit.forEach(function (cell, i) {
+        cell.setAttribute("opacity", String(seg(t, at + i * 0.03, at + 0.28 + i * 0.03)));
+      });
+      root._note.style.opacity = String(seg(t, at + 0.15, at + 0.5));
+      root._src.style.opacity = String(p);
+    }
+
+    function buildLines(root, scene) {
+      var h = document.createElement("h2");
+      h.textContent = scene.title || "";
+      var ul = document.createElement("ul");
+      var items = [];
+      (scene.lines || []).forEach(function (line) {
+        var li = document.createElement("li");
+        var mark = document.createElement("i");
+        var span = document.createElement("span");
+        span.textContent = line;
+        li.appendChild(mark);
+        li.appendChild(span);
+        ul.appendChild(li);
+        items.push(li);
+      });
+      root.appendChild(h);
+      root.appendChild(ul);
+      root._h = h;
+      root._items = items;
+    }
+
+    function updateLines(root, t, dur, scene) {
+      root._h.style.opacity = String(seg(t, 0.02, 0.25));
+      root._items.forEach(function (li, i) {
+        var line = (scene.lines || [])[i] || "";
+        var key = line.replace(/[，。！？、]/g, "").slice(0, 4);
+        var at = cueStart(scene.cues, key, 0.35 + i * 0.7);
+        var p = seg(t, at, at + 0.28);
+        li.style.opacity = String(p);
+        li.style.transform = "translateY(" + ((1 - p) * 16) + "px)";
+      });
+    }
+
+    function buildEnd(root, scene) {
+      var kicker = document.createElement("p");
+      kicker.className = "kicker";
+      kicker.textContent = scene.kicker || "";
+      var rule = document.createElement("div");
+      rule.className = "rule";
+      var p = document.createElement("p");
+      p.className = "disclosure";
+      var parts = (scene.title || "").split(" · ");
+      if (parts.length === 2) {
+        p.appendChild(document.createTextNode(parts[0] + " ·"));
+        p.appendChild(document.createElement("br"));
+        p.appendChild(document.createTextNode(parts[1]));
+      } else {
+        p.textContent = scene.title || "";
+      }
+      root.appendChild(kicker);
+      root.appendChild(rule);
+      root.appendChild(p);
+      root._block = [kicker, rule, p];
+    }
+
+    function updateEnd(root, t) {
+      var p = seg(t, 0.02, 0.32);
+      root._block.forEach(function (el) { el.style.opacity = String(p); });
+    }
+
+    var builders = {
+      opener: buildOpener,
+      split: buildSplit,
+      bars: buildBars,
+      race: buildRace,
+      sparse: buildSparse,
+      lines: buildLines,
+      end: buildEnd
+    };
+    var updaters = {
+      opener: updateOpener,
+      split: updateSplit,
+      bars: updateBars,
+      race: updateRace,
+      sparse: updateSparse,
+      lines: updateLines,
+      end: updateEnd
+    };
+
+    var film = window.__film;
+    var stage = document.getElementById("stage");
+    var tickRow = document.getElementById("ticks");
+    film.scenes.forEach(function (scene) {
+      var tick = document.createElement("div");
+      tick.className = "tick";
+      var bar = document.createElement("b");
+      tick.appendChild(bar);
+      tickRow.appendChild(tick);
+      scene._tick = bar;
+      var root = document.createElement("section");
+      root.className = "scene " + scene.template;
+      builders[scene.template](root, scene);
+      stage.appendChild(root);
+      scene.root = root;
+    });
+
+    function activeScene(t) {
+      var scenes = film.scenes;
+      var found = scenes[scenes.length - 1];
+      for (var i = 0; i < scenes.length; i++) {
+        if (t >= scenes[i].start && t < scenes[i].end) return scenes[i];
+      }
+      return found;
+    }
+
+    window.setRenderTime = function (t) {
+      var current = activeScene(t);
+      var idx = film.scenes.indexOf(current);
+      film.scenes.forEach(function (scene, i) {
+        var on = scene === current;
+        scene.root.style.opacity = on ? "1" : "0";
+        var local = t - scene.start;
+        var span = Math.max(0.001, scene.end - scene.start);
+        var progress = on ? clamp01(local / span) : (i < idx ? 1 : 0);
+        scene._tick.style.transform = "scaleX(" + progress + ")";
+        scene._tick.style.background = i < idx ? BLUE : ORANGE;
+        if (on) updaters[scene.template](scene.root, Math.max(0, local), span, scene);
+      });
+      var text = cueText(current.cues, Math.max(0, t - current.start));
+      document.getElementById("sub").textContent = text;
+      document.getElementById("submark").style.opacity = text ? "1" : "0";
+    };
+  </script>
+</body>
+</html>

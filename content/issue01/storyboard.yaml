@@ -1,64 +1,68 @@
-# 第 1 期 60 秒竖版分镜。旁白里的数字只能写 {Cxx}，由 render.py 从 claims.yaml 填入。
+# 第 1 期 60 秒竖版。一条论证：一次提问没有统一电量，机房可以先建好，电不一定送得到，少算是另一条路。
+# 旁白和画面文字里的数字只能写 {Cxx}，由 render.py 从 claims.yaml 填入。
 issue: issue01
 format: vertical
 width: 1080
 height: 1920
-fps: 12
+fps: 24
 voice: zh-CN-YunxiNeural
-tail_seconds: 0.5
+tail_seconds: 0.35
 scenes:
   - id: s01
-    template: title-card
-    kicker: AI 科普工作室
+    template: opener
     text: AI算力，为什么卡在电力上
     subtitle: 从一次提问到一座机房
     narration: "你敲下一个问题，背后是整座机房。计算要用电，散热也要用电。"
 
   - id: s02
-    template: big-number
-    claim: C01
-    aside_claim: C02
-    aside_label: 实测中位数
-    label: 单次查询耗电估算
-    narration: "估算大约是{C01}{C01.unit}，实测中位数大约是{C02}{C02.unit}。口径不同，不能直接比。"
+    template: split
+    left: C01
+    right: C02
+    left_label: 单次查询
+    right_label: 文本提示中位数
+    stamp: 不能直接比
+    footnote: 两套口径，不能相减
+    narration: "一次查询没有统一电量。估算约{C01}{C01.unit}，实测中位数约{C02}{C02.unit}。口径不同，不能直接比。"
 
   - id: s03
-    template: big-number
-    claim: C03
-    label: 全球数据中心用电
-    narration: "{C03.year}年，全球数据中心用电约{C03}{C03.unit}。不全是人工智能。"
+    template: bars
+    left: C03
+    right: C04
+    left_label: 全球数据中心
+    right_label: 基准情景
+    note: 全部数据中心，不全是人工智能
+    narration: "{C03.year}年，全球数据中心约{C03}{C03.unit}。基准情景下，{C04.year}年预计{C04}{C04.unit}。这是预测，不全是人工智能。"
 
   - id: s04
-    template: big-number
-    claim: C04
-    label: 基准情景下的预测
-    narration: "基准情景下，{C04.year}年预计{C04}{C04.unit}。这是预测，不是事实。"
+    template: race
+    left_title: 机房
+    right_title: 电网
+    left_tag: 往往先建好
+    right_tag: 线路和变电站还要审批
+    stamp: 还没接通
+    narration: "机房往往建得更快。线路和变电站，还要评估和审批。电送不进来，算力就跑不起来。"
 
   - id: s05
-    template: broll
-    asset: static/img/issue01-cover-vertical.jpg
-    pan: right
-    caption: 机房可以先建好，电还得送进来
-    narration: "机房往往建得更快。高压线路和变电站，还要过评估和审批。"
+    template: sparse
+    total: C26
+    active: C27
+    total_label: 模型总参数
+    active_label: 每个词元激活
+    note: 亮着的，才参与这一次计算
+    narration: "少算一点，也能少用一点电。总参数{C26}{C26.unit}，每个词元只激活{C27}{C27.unit}。"
 
   - id: s06
-    template: broll
-    asset: static/img/issue01-cover.jpg
-    pan: left
-    caption: 算力越集中，供电和散热也越集中
-    narration: "芯片靠得越近，电和热也越集中。电送不进来，算力就跑不起来。"
+    template: lines
+    text: 记住这几句
+    lines:
+      - 一次提问，没有统一电量
+      - 电送不到，算力就停
+      - 少算一点，也是出路
+    narration: "一次提问，没有统一电量。电送不到，算力就停。少算一点，也是出路。"
 
   - id: s07
-    template: big-number
-    claim: C27
-    aside_claim: C26
-    aside_label: 模型总参数
-    label: 每个词元激活的参数
-    narration: "总参数{C26}{C26.unit}，每个词元只激活{C27}{C27.unit}。少算一点，也能少用一点电。"
-
-  - id: s08
-    template: title-card
+    template: end
     kicker: 说明
     text: "本视频部分画面为 AI 生成 · 数据来源见网站第 1 期"
     subtitle: ""
-    narration: "部分画面由人工智能生成。数据来源见网站第一期。"
+    narration: "本视频部分画面为人工智能生成。数据来源见网站第一期。"
