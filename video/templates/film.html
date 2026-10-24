@@ -50,7 +50,18 @@
       position: absolute;
       top: 180px; left: 80px; right: 80px; bottom: 318px;
       z-index: 2;
+      overflow: hidden;
     }
+    #fx {
+      position: absolute;
+      top: 0; bottom: 0; left: 0;
+      width: 18px;
+      background: var(--orange);
+      z-index: 8;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #stage svg * { transform-box: fill-box; }
     .scene { position: absolute; inset: 0; opacity: 0; }
 
     .subwrap {
@@ -320,7 +331,7 @@
     <p class="brand"><i></i>AI 科普工作室</p>
     <div class="ticks" id="ticks"></div>
   </header>
-  <div id="stage"></div>
+  <div id="stage"><div id="fx"></div></div>
   <div class="subwrap">
     <div class="submark" id="submark"></div>
     <p id="sub"></p>
@@ -485,11 +496,13 @@
       });
       svg.appendChild(power);
 
+      var cluster = S("g");
+      svg.appendChild(cluster);
       var racks = [];
       var drops = [];
       var x0 = 168, rw = 96, gap = 22, rh = 292, base = 948;
       for (var i = 0; i < 5; i++) {
-        var rack = addRack(svg, rw, rh);
+        var rack = addRack(cluster, rw, rh);
         var x = x0 + i * (rw + gap);
         rack.g.setAttribute("transform", "translate(" + x + " " + (base - rh) + ")");
         rack.x = x;
@@ -501,10 +514,11 @@
         svg.appendChild(drop);
         drops.push(drop);
       }
-      svg.appendChild(S("line", {
+      var ground = S("line", {
         x1: 140, y1: 956, x2: 820, y2: 956,
         stroke: PAPER, "stroke-width": 2, opacity: 0.35
-      }));
+      });
+      svg.appendChild(ground);
 
       root._title = title;
       root._deck = deck;
@@ -514,6 +528,8 @@
       root._racks = racks;
       root._drops = drops;
       root._station = station;
+      root._rackCluster = cluster;
+      root._extras = [wire, towerA, towerB, ground].concat(drops);
     }
 
     function updateOpener(root, t) {
@@ -560,6 +576,7 @@
       root.appendChild(stamp);
       root.appendChild(note);
       root._row = row;
+      root._cards = [row.children[0], row.children[1]];
       root._stamp = stamp;
       root._note = note;
     }
@@ -590,9 +607,9 @@
     }
 
     function updateSplit(root, t, dur, scene) {
-      var p = seg(t, 0.04, 0.36);
+      var p = root._present ? 1 : seg(t, 0.04, 0.36);
       root._row.style.opacity = String(p);
-      root._row.style.transform = "translateY(" + ((1 - p) * 18) + "px)";
+      root._row.style.transform = root._present ? "none" : ("translateY(" + ((1 - p) * 18) + "px)");
       var at = cueStart(scene.cues, scene.stamp, 0.7);
       var s = seg(t, at, at + 0.28);
       root._stamp.style.opacity = String(s);
@@ -622,11 +639,13 @@
       var base = 760;
       var maxH = 500;
       var maxV = Math.max(scene.left.number, scene.right.number);
-      svg.appendChild(S("line", {
+      var axis = S("line", {
         x1: 120, y1: base, x2: 800, y2: base,
         stroke: PAPER, "stroke-width": 2, opacity: 0.4
-      }));
+      });
+      svg.appendChild(axis);
       function column(card, x, label, accent) {
+        var g = S("g");
         var h = maxH * card.number / maxV;
         var bar = S("rect", {
           x: x - 84, y: base, width: 168, height: 0,
@@ -654,17 +673,20 @@
           "font-size": 28, class: accent ? "sans accent" : "sans dim"
         });
         kind.textContent = label ? card.kindLabel + " · " + label : card.kindLabel;
-        svg.appendChild(bar);
-        svg.appendChild(num);
-        svg.appendChild(unit);
-        svg.appendChild(year);
-        svg.appendChild(kind);
-        return { bar: bar, num: num, unit: unit, year: year, kind: kind, h: h, x: x };
+        g.appendChild(bar);
+        g.appendChild(num);
+        g.appendChild(unit);
+        g.appendChild(year);
+        g.appendChild(kind);
+        svg.appendChild(g);
+        return { bar: bar, num: num, unit: unit, year: year, kind: kind, h: h, x: x, g: g };
       }
       root._title = title;
       root._left = column(scene.left, 300, "", false);
       root._right = column(scene.right, 640, scene.rightLabel, true);
       root._note = note;
+      root._src = src;
+      root._axis = axis;
       root._base = base;
     }
 
@@ -680,9 +702,10 @@
     }
 
     function updateBars(root, t, dur, scene) {
-      root._title.style.opacity = String(seg(t, 0.02, 0.28));
+      var shown = root._present;
+      root._title.style.opacity = String(shown ? 1 : seg(t, 0.02, 0.28));
       var rightAt = Math.max(0.35, cueStart(scene.cues, scene.right.value, 0.5));
-      grow(root._left, seg(t, 0.1, 0.85), root._base);
+      grow(root._left, shown ? 1 : seg(t, 0.05, 0.48), root._base);
       grow(root._right, seg(t, rightAt, rightAt + 0.75), root._base);
       root._note.style.opacity = String(seg(t, rightAt + 0.2, rightAt + 0.55));
     }
@@ -767,32 +790,37 @@
 
       root._leftBits = { racks: racks, bus: bus, title: lt, tag: lg };
       root._rightBits = { t1: t1, t2: t2, live1: live1, live2: live2, station: station, stop: stop, title: rt, tag: rg };
+      root._leftArt = la;
+      root._rightArt = ra;
       root._mid = mid;
     }
 
     function updateRace(root, t, dur, scene) {
-      var lp = seg(t, 0.05, 0.42);
+      // During the zoom-through the hall is already built. Wires still draw
+      // on the real clock, starting as the zoom lands, so nothing rewinds.
+      var vis = root._present ? Math.max(t, 0.48) : t;
+      var lp = seg(vis, 0.02, 0.22);
       root._leftBits.title.style.opacity = String(lp);
-      root._leftBits.tag.style.opacity = String(seg(t, 0.3, 0.55));
-      root._leftBits.bus.setAttribute("opacity", String(seg(t, 0.2, 0.45)));
+      root._leftBits.tag.style.opacity = String(seg(vis, 0.08, 0.28));
+      root._leftBits.bus.setAttribute("opacity", String(seg(vis, 0.05, 0.22)));
       root._leftBits.racks.forEach(function (rack, i) {
-        var p = seg(t, 0.08 + i * 0.05, 0.28 + i * 0.05);
+        var p = seg(vis, 0.02 + i * 0.02, 0.16 + i * 0.02);
         rack.g.style.opacity = String(p);
-        rack.drop.setAttribute("opacity", String(seg(t, 0.35, 0.6)));
-        rack.leds.forEach(function (led) { led.setAttribute("opacity", String(seg(t, 0.4, 0.7))); });
+        rack.drop.setAttribute("opacity", String(seg(vis, 0.1, 0.26)));
+        rack.leds.forEach(function (led) { led.setAttribute("opacity", String(seg(vis, 0.14, 0.32))); });
       });
 
       var towers = [root._rightBits.t1, root._rightBits.t2, root._rightBits.live1, root._rightBits.live2];
       towers.forEach(function (path) { if (!path._len) prepDraw(path); });
-      var td = seg(t, 0.15, 1.05);
+      var td = seg(vis, 0.04, 0.42);
       drawTo(root._rightBits.t1, td);
       drawTo(root._rightBits.t2, td);
-      var wireP = Math.min(0.7, seg(t, 0.35, 1.7));
+      var wireP = Math.min(0.7, seg(t, 0.55, 1.7));
       drawTo(root._rightBits.live1, wireP);
       drawTo(root._rightBits.live2, wireP);
-      root._rightBits.title.style.opacity = String(seg(t, 0.15, 0.4));
-      root._rightBits.tag.style.opacity = String(seg(t, 0.8, 1.15));
-      root._rightBits.station.style.opacity = String(seg(t, 0.4, 0.8));
+      root._rightBits.title.style.opacity = String(seg(vis, 0.06, 0.26));
+      root._rightBits.tag.style.opacity = String(seg(vis, 0.18, 0.4));
+      root._rightBits.station.style.opacity = String(seg(vis, 0.1, 0.36));
       if (wireP > 0.62 && root._rightBits.live1._len) {
         var pt = root._rightBits.live1.getPointAtLength(root._rightBits.live1._len * 0.7);
         root._rightBits.stop.setAttribute("x", String(pt.x - 9));
@@ -861,6 +889,8 @@
       root.appendChild(note);
       root.appendChild(src);
       root._pair = pair;
+      root._grid = gridwrap;
+      root._leftStat = pair.firstChild;
       root._cells = cells;
       root._lit = litCells;
       root._activeCol = pair.lastChild;
@@ -887,9 +917,10 @@
     }
 
     function updateSparse(root, t, dur, scene) {
-      var p = seg(t, 0.04, 0.32);
+      var p = root._present ? 1 : seg(t, 0.04, 0.32);
       root._pair.firstChild.style.opacity = String(p);
-      root._cells.forEach(function (cell) { cell.setAttribute("opacity", String(seg(t, 0.12, 0.4))); });
+      var cellP = root._present ? 1 : seg(t, 0.12, 0.4);
+      root._cells.forEach(function (cell) { cell.setAttribute("opacity", String(cellP)); });
       var at = Math.max(0.35, cueStart(scene.cues, scene.active.value, 0.8));
       var lp = seg(t, at, at + 0.45);
       root._activeCol.style.opacity = String(lp);
@@ -922,14 +953,14 @@
     }
 
     function updateLines(root, t, dur, scene) {
-      root._h.style.opacity = String(seg(t, 0.02, 0.25));
+      root._h.style.opacity = String(root._present ? 1 : seg(t, 0.02, 0.25));
       root._items.forEach(function (li, i) {
         var line = (scene.lines || [])[i] || "";
         var key = line.replace(/[，。！？、]/g, "").slice(0, 4);
         var at = cueStart(scene.cues, key, 0.35 + i * 0.7);
-        var p = seg(t, at, at + 0.28);
+        var p = seg(t, at, at + 0.32);
         li.style.opacity = String(p);
-        li.style.transform = "translateY(" + ((1 - p) * 16) + "px)";
+        li.style.transform = "translateX(" + ((1 - p) * 78) + "px)";
       });
     }
 
@@ -956,7 +987,7 @@
     }
 
     function updateEnd(root, t) {
-      var p = seg(t, 0.02, 0.32);
+      var p = root._present ? 1 : seg(t, 0.02, 0.32);
       root._block.forEach(function (el) { el.style.opacity = String(p); });
     }
 
@@ -996,6 +1027,125 @@
       scene.root = root;
     });
 
+    // Each join straddles the scene boundary: the tail of one shot and the
+    // opening of the next. Shared pieces move, resize, or recolor. Nothing
+    // here is a CSS transition — every frame is a function of t.
+    // 0 morph, 1 morph, 2 zoom-through, 3 morph, 4 slide, 5 shape-wipe.
+    var MORPH_OUT = 0.28;
+    var MORPH_IN = 0.56;
+    var gripped = [];
+
+    function lerp(a, b, p) { return a + (b - a) * p; }
+    function smooth(x) { x = clamp01(x); return x * x * (3 - 2 * x); }
+    function easeIO(x) {
+      x = clamp01(x);
+      return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+    }
+    function ramp(p, a, b) { return smooth((p - a) / (b - a)); }
+    function grip(el) {
+      if (!el || gripped.indexOf(el) >= 0) return;
+      gripped.push(el);
+    }
+    function release() {
+      for (var i = 0; i < gripped.length; i++) {
+        var el = gripped[i];
+        el.style.transform = "";
+        el.style.opacity = "";
+        el.style.clipPath = "";
+        el.style.transformOrigin = "";
+        el.style.borderTopColor = "";
+        el.style.backgroundColor = "";
+        el.style.borderColor = "";
+      }
+    }
+    function boxOf(el) {
+      if (!el) return null;
+      if (el._box) return el._box;
+      var s = stage.getBoundingClientRect();
+      var r = el.getBoundingClientRect();
+      el._box = {
+        x: r.left - s.left,
+        y: r.top - s.top,
+        w: Math.max(1, r.width),
+        h: Math.max(1, r.height),
+        cx: r.left - s.left + r.width / 2,
+        cy: r.top - s.top + r.height / 2
+      };
+      return el._box;
+    }
+    function morphTo(el, from, to, p, opacity) {
+      if (!el || !from || !to) return;
+      var rest = boxOf(el);
+      var cx = lerp(from.cx, to.cx, p);
+      var cy = lerp(from.cy, to.cy, p);
+      var bw = Math.max(1, lerp(from.w, to.w, p));
+      var bh = Math.max(1, lerp(from.h, to.h, p));
+      var sc = Math.min(bw / rest.w, bh / rest.h);
+      if (!isFinite(sc) || sc <= 0) sc = 1;
+      el.style.transformOrigin = "center center";
+      el.style.transform = "translate(" + (cx - rest.cx).toFixed(2) + "px," + (cy - rest.cy).toFixed(2) + "px) scale(" + sc.toFixed(4) + ")";
+      el.style.opacity = String(clamp01(opacity));
+      grip(el);
+    }
+    function fadeStyle(el, opacity) {
+      if (!el) return;
+      el.style.opacity = String(clamp01(opacity));
+      grip(el);
+    }
+    function fadeChildren(el, opacity) {
+      if (!el) return;
+      for (var i = 0; i < el.children.length; i++) fadeStyle(el.children[i], opacity);
+    }
+    function mixHex(a, b, p) {
+      function part(hex, i) { return parseInt(hex.slice(i, i + 2), 16); }
+      function hex2(n) { var s = Math.round(n).toString(16); return s.length < 2 ? "0" + s : s; }
+      var r = part(a, 1) + (part(b, 1) - part(a, 1)) * p;
+      var g = part(a, 3) + (part(b, 3) - part(a, 3)) * p;
+      var bl = part(a, 5) + (part(b, 5) - part(a, 5)) * p;
+      return "#" + hex2(r) + hex2(g) + hex2(bl);
+    }
+    function paintPlate(el) {
+      el.style.backgroundColor = NAVY;
+      grip(el);
+    }
+    function measureAll() {
+      if (measureAll.done) return;
+      var bars = null;
+      film.scenes.forEach(function (scene) {
+        if (scene.template === "bars") bars = scene;
+      });
+      if (bars) {
+        [bars.root._left, bars.root._right].forEach(function (col) {
+          col.bar.setAttribute("y", String(bars.root._base - col.h));
+          col.bar.setAttribute("height", String(col.h));
+        });
+      }
+      stage.getBoundingClientRect();
+      film.scenes.forEach(function (scene) {
+        var root = scene.root;
+        var els = [
+          root._title, root._deck, root._rackCluster, root._station, root._power,
+          root._stamp, root._note, root._leftArt, root._rightArt, root._grid,
+          root._leftStat, root._h, root._axis, root._src, root._mid
+        ];
+        if (root._left) els.push(root._left.g);
+        if (root._right) els.push(root._right.g);
+        if (root._cards) els = els.concat(root._cards);
+        if (root._extras) els = els.concat(root._extras);
+        if (root._leftBits) els.push(root._leftBits.title, root._leftBits.tag);
+        if (root._rightBits) els.push(root._rightBits.title, root._rightBits.tag);
+        if (root._items) els = els.concat(root._items);
+        if (root._block) els = els.concat(root._block);
+        els.forEach(boxOf);
+      });
+      if (bars) {
+        [bars.root._left, bars.root._right].forEach(function (col) {
+          col.bar.setAttribute("y", String(bars.root._base));
+          col.bar.setAttribute("height", "0");
+        });
+      }
+      measureAll.done = true;
+    }
     function activeScene(t) {
       var scenes = film.scenes;
       var found = scenes[scenes.length - 1];
@@ -1004,23 +1154,190 @@
       }
       return found;
     }
+    function transitionOf(t) {
+      var scenes = film.scenes;
+      for (var i = 0; i < scenes.length - 1; i++) {
+        var boundary = scenes[i].end;
+        var a = boundary - MORPH_OUT;
+        var b = boundary + MORPH_IN;
+        if (t >= a && t < b) {
+          return { index: i, p: easeIO((t - a) / (b - a)), out: scenes[i], inn: scenes[i + 1] };
+        }
+      }
+      return null;
+    }
+    function runScene(scene, t) {
+      var span = Math.max(0.001, scene.end - scene.start);
+      var local = t - scene.start;
+      if (local < 0) local = 0;
+      if (local > span) local = span;
+      updaters[scene.template](scene.root, local, span, scene);
+    }
+    function subtitleOpacity(t) {
+      var o = 1;
+      for (var i = 0; i < film.scenes.length - 1; i++) {
+        var d = t - film.scenes[i].end;
+        if (d >= -0.12 && d < 0) o = Math.min(o, -d / 0.12);
+        else if (d >= 0 && d < 0.14) o = Math.min(o, d / 0.14);
+      }
+      return o;
+    }
+    function showPair(tr) {
+      tr.out.root.style.opacity = "1";
+      tr.inn.root.style.opacity = "1";
+      tr.out.root.style.zIndex = "1";
+      tr.inn.root.style.zIndex = "2";
+    }
+    function morphSplit(tr) {
+      var p = tr.p;
+      var o = tr.out.root;
+      var n = tr.inn.root;
+      var racks = boxOf(o._rackCluster);
+      var station = boxOf(o._station);
+      var leftCard = n._cards[0];
+      var rightCard = n._cards[1];
+      morphTo(o._rackCluster, racks, boxOf(leftCard), p, 1 - ramp(p, 0.22, 0.58));
+      morphTo(o._station, station, boxOf(rightCard), p, 1 - ramp(p, 0.05, 0.36));
+      morphTo(leftCard, racks, boxOf(leftCard), p, ramp(p, 0.16, 0.52));
+      morphTo(rightCard, station, boxOf(rightCard), p, ramp(p, 0.16, 0.52));
+      fadeStyle(o._title, 1 - ramp(p, 0, 0.36));
+      o._title.style.transform = "translateY(" + (-p * 36).toFixed(2) + "px)";
+      grip(o._title);
+      fadeStyle(o._deck, 1 - ramp(p, 0, 0.3));
+      fadeStyle(o._power, 1 - ramp(p, 0, 0.28));
+      (o._extras || []).forEach(function (el) { fadeStyle(el, 1 - ramp(p, 0, 0.34)); });
+    }
+    function morphBars(tr) {
+      var p = tr.p;
+      var o = tr.out.root;
+      var n = tr.inn.root;
+      var leftCard = o._cards[0];
+      var rightCard = o._cards[1];
+      var leftCol = boxOf(n._left.g);
+      var rightCol = boxOf(n._right.g);
+      var textOut = 1 - ramp(p, 0.05, 0.28);
+      morphTo(leftCard, boxOf(leftCard), leftCol, p, 1 - ramp(p, 0.48, 0.78));
+      morphTo(rightCard, boxOf(rightCard), rightCol, p, 1 - ramp(p, 0.42, 0.7));
+      fadeChildren(leftCard, textOut);
+      fadeChildren(rightCard, textOut);
+      morphTo(n._left.g, boxOf(leftCard), leftCol, p, ramp(p, 0.34, 0.72));
+      var tint = mixHex(BLUE, ORANGE, ramp(p, 0.05, 0.5));
+      rightCard.style.borderTopColor = tint;
+      grip(rightCard);
+      var badge = rightCard.querySelector(".badge");
+      if (badge) {
+        badge.style.backgroundColor = tint;
+        badge.style.borderColor = tint;
+        grip(badge);
+      }
+      fadeStyle(o._stamp, 1 - ramp(p, 0, 0.3));
+      fadeStyle(o._note, 1 - ramp(p, 0, 0.3));
+      fadeStyle(n._title, ramp(p, 0.38, 0.8));
+      fadeStyle(n._axis, ramp(p, 0.62, 0.9));
+      fadeStyle(n._src, ramp(p, 0.42, 0.82));
+    }
+    function zoomThrough(tr) {
+      var p = tr.p;
+      var out = tr.out.root;
+      var inn = tr.inn.root;
+      paintPlate(out);
+      paintPlate(inn);
+      out.style.transformOrigin = "center center";
+      out.style.transform = "scale(" + lerp(1, 1.34, p).toFixed(4) + ")";
+      out.style.opacity = String(1 - ramp(p, 0.3, 0.52));
+      inn.style.transformOrigin = "center center";
+      inn.style.transform = "scale(" + lerp(1.22, 1, p).toFixed(4) + ")";
+      inn.style.opacity = String(ramp(p, 0.36, 0.62));
+      grip(out);
+      grip(inn);
+    }
+    function morphGrid(tr) {
+      var p = tr.p;
+      var o = tr.out.root;
+      var n = tr.inn.root;
+      var from = boxOf(o._leftArt);
+      var to = boxOf(n._grid);
+      morphTo(o._leftArt, from, to, p, 1 - ramp(p, 0.18, 0.64));
+      morphTo(n._grid, from, to, p, ramp(p, 0.26, 0.7));
+      [o._rightArt, o._rightBits.title, o._rightBits.tag].forEach(function (el) {
+        el.style.transform = "translateX(" + (p * 210).toFixed(2) + "px)";
+        el.style.opacity = String(1 - ramp(p, 0.04, 0.52));
+        grip(el);
+      });
+      fadeStyle(o._leftBits.title, 1 - ramp(p, 0.04, 0.4));
+      fadeStyle(o._leftBits.tag, 1 - ramp(p, 0, 0.34));
+      fadeStyle(o._mid, 1 - ramp(p, 0, 0.26));
+      fadeStyle(n._leftStat, ramp(p, 0.38, 0.78));
+    }
+    function slideUp(tr) {
+      var p = tr.p;
+      var out = tr.out.root;
+      var inn = tr.inn.root;
+      paintPlate(out);
+      paintPlate(inn);
+      out.style.transform = "translateY(" + (-p * 100).toFixed(3) + "%)";
+      out.style.opacity = "1";
+      inn.style.transform = "translateY(" + ((1 - p) * 100).toFixed(3) + "%)";
+      inn.style.opacity = "1";
+      grip(out);
+      grip(inn);
+    }
+    function shapeWipe(tr) {
+      var p = tr.p;
+      var out = tr.out.root;
+      var inn = tr.inn.root;
+      paintPlate(out);
+      paintPlate(inn);
+      out.style.clipPath = "inset(0 0 0 " + (p * 100).toFixed(3) + "%)";
+      inn.style.clipPath = "inset(0 " + ((1 - p) * 100).toFixed(3) + "% 0 0)";
+      var fx = document.getElementById("fx");
+      fx.style.opacity = "1";
+      fx.style.transform = "translateX(" + (p * stage.clientWidth - 9).toFixed(2) + "px)";
+      grip(out);
+      grip(inn);
+    }
+    var joins = [morphSplit, morphBars, zoomThrough, morphGrid, slideUp, shapeWipe];
 
     window.setRenderTime = function (t) {
+      release();
+      var fx = document.getElementById("fx");
+      fx.style.opacity = "0";
+      fx.style.transform = "";
+      film.scenes.forEach(function (scene) {
+        scene.root._present = false;
+        scene.root.style.opacity = "0";
+        scene.root.style.transform = "";
+        scene.root.style.clipPath = "";
+        scene.root.style.zIndex = "";
+        scene.root.style.transformOrigin = "";
+      });
+      measureAll();
+      var tr = transitionOf(t);
+      if (tr) tr.inn.root._present = true;
       var current = activeScene(t);
       var idx = film.scenes.indexOf(current);
       film.scenes.forEach(function (scene, i) {
-        var on = scene === current;
-        scene.root.style.opacity = on ? "1" : "0";
-        var local = t - scene.start;
         var span = Math.max(0.001, scene.end - scene.start);
-        var progress = on ? clamp01(local / span) : (i < idx ? 1 : 0);
+        var local = t - scene.start;
+        var progress = i < idx ? 1 : (i === idx ? clamp01(local / span) : 0);
         scene._tick.style.transform = "scaleX(" + progress + ")";
         scene._tick.style.background = i < idx ? BLUE : ORANGE;
-        if (on) updaters[scene.template](scene.root, Math.max(0, local), span, scene);
       });
+      if (tr) {
+        runScene(tr.out, t);
+        runScene(tr.inn, t);
+        showPair(tr);
+        joins[tr.index](tr);
+      } else {
+        current.root.style.opacity = "1";
+        runScene(current, t);
+      }
       var text = cueText(current.cues, Math.max(0, t - current.start));
-      document.getElementById("sub").textContent = text;
-      document.getElementById("submark").style.opacity = text ? "1" : "0";
+      var sub = document.getElementById("sub");
+      sub.textContent = text;
+      var so = subtitleOpacity(t);
+      sub.style.opacity = String(so);
+      document.getElementById("submark").style.opacity = text ? String(so) : "0";
     };
   </script>
 </body>

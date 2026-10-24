@@ -109,7 +109,7 @@ Windows 上如果 `python` 会打开应用商店，改用已安装的 Python 3.1
 
 ## 画面
 
-模板在 `video/templates/film.html`，共用 `tokens.css`。一页里按镜头硬切，页眉和字幕区保持不动。
+模板在 `video/templates/film.html`，共用 `tokens.css`。页眉和字幕区保持不动。镜头相接处在 `setRenderTime` 里做转场（共享元素位移、缩放、变色，或推进、上滑、形状擦除），时长落在上一镜尾音和下一镜开头。不要改成 CSS transition，也不要改回整镜硬切。
 
 - 画布 1080×1920，默认 24 帧。
 - 海军蓝 `#1B2A41`，冷蓝 `#1F6E8C`，暖橙 `#B5452F`，米白 `#F7F4EC`，灰 `#5B6475`。
