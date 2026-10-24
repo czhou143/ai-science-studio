@@ -102,7 +102,7 @@ python video/render.py issue01
 python video/render.py issue01 --audio-only
 ```
 
-脚本用分镜里的 `voice`（默认 `zh-CN-YunxiNeural`）调用免费的 edge-tts，不需要 API key，但需要能访问网络。旁白里的数字写成 `{C01}`、`{C01.unit}`、`{C01.year}`，由 `claims.yaml` 填入；未核实的主张不能进旁白。镜头时长是配音长度再加 `tail_seconds`（默认 0.5 秒）。字幕来自 TTS 返回的词级时间，写成 `out/issue01-vertical.srt`，并叠在画面底部。空镜如果找不到分镜里的素材，会改用 `static/img/<issue>-cover-vertical.jpg` 和 `static/img/<issue>-cover.jpg`。
+脚本用分镜里的 `voice`（默认 `zh-CN-YunxiNeural`）调用免费的 edge-tts，不需要 API key，但需要能访问网络。旁白和画面上的数字写成 `{C01}`、`{C01.unit}`、`{C01.year}`，由 `claims.yaml` 填入；未核实的主张不能进视频。镜头时长是配音长度再加 `tail_seconds`。字幕来自 TTS 返回的词级时间，写成 `out/issue01-vertical.srt`，并叠在画面底部。画面是一页 HTML 动画，不是把封面做平移。末卡文字固定为「本视频部分画面为 AI 生成 · 数据来源见网站第 N 期」。
 
 > **Windows：** 用 Python 3.12 解释器运行，例如
 > `& "C:\Users\dell\AppData\Local\Programs\Python\Python312\python.exe" video\render.py issue01`

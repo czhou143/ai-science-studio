@@ -206,7 +206,10 @@ def storyboard_claim_ids(text: str) -> list[str]:
     if not text:
         return []
     found = re.findall(r"\{(C\d+)(?:\.[A-Za-z_]+)?\}", text)
-    found += re.findall(r"(?m)^[ \t-]*(?:claim|aside_claim):\s*(C\d+)\s*$", text)
+    found += re.findall(
+        r"(?m)^[ \t-]*(?:claim|aside_claim|left|right|total|active):\s*(C\d+)\s*$",
+        text,
+    )
     return found
 
 
